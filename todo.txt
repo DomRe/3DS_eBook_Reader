@@ -11,3 +11,4 @@
 - fix multiples of ''' characters -> maybne make string in textvisitor null terminating?
 - qrcode download.
 - port reader to litehtml for formatting, css, better font and text rendering, etc...
+- multi-language

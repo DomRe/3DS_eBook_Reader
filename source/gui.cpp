@@ -17,6 +17,17 @@
 
 using namespace tinyxml2;
 
+// https://gbatemp.net/threads/wip-ebook-reader-read-ebooks-on-your-3ds-alpha-1.434453/
+// https://www.reddit.com/r/3dshacks/comments/4sze79/wip_ebook_reader_alpha_1_release/
+// https://github.com/litehtml/litehtml/wiki/How-to-use-litehtml
+// https://github.com/litehtml/litehtml/blob/master/containers/linux/container_linux.h
+// https://github.com/litehtml/litehtml/blob/master/containers/linux/container_linux.cpp
+// https://github.com/litehtml/litebrowser-linux/blob/master/src/html_widget.h
+// https://github.com/litehtml/litebrowser-linux/blob/master/src/html_widget.cpp
+// https://github.com/litehtml/litebrowser-linux/blob/master/src/main.cpp
+
+
+
 // Thanks to http://stackoverflow.com/a/6417908
 std::string Gui::remove_extension(const std::string& filename)
 {
