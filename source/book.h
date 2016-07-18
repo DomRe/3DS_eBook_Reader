@@ -7,6 +7,8 @@
 
 #include "zip/BLUnZip.h"
 
+#include "rendering.h"
+
 // Forward dec
 class Gui;
 
@@ -21,7 +23,7 @@ public:
 	void ParseOPF(BLUnZip& zipfile);
 	void ParsePages(BLUnZip& zipfile);
 
-	void Reader(Gui& gui);
+	void Reader(Gui& gui, Renderer& ren);
 	void CloseBook();
 
 	std::string GetBook();
@@ -42,6 +44,8 @@ public:
 	// All the text in the book.
 	std::vector<std::string> alltext;
 
+	//litehtml::document::ptr m_html;
+	litehtml::position bookpos;
 };
 
 #endif

@@ -32,7 +32,7 @@ litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName,
 	FTC_FaceID face_id = (FTC_FaceID)m_Font.font;
 	FT_Face face;
 	FTC_Manager_LookupFace(sftd_get_manager(m_Font.font), face_id, &face);
-	m_Font.size = size;
+	m_Font.size = 12; // = size;
 
 	int scale = face->size->metrics.y_scale;
 
@@ -54,24 +54,17 @@ litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName,
 
 void container_3ds::delete_font(litehtml::uint_ptr hFont)
 {
-	if (m_Font.font)
-	{
-		sftd_free_font(m_Font.font);
-	}
+	Close();
 }
 
 int container_3ds::text_width(const litehtml::tchar_t* text, litehtml::uint_ptr hFont)
 {
-	sftd_font_extended* fnt = (sftd_font_extended*) hFont;
-
-	return sftd_get_text_width(fnt->font, fnt->size, text);
+	return sftd_get_text_width(m_Font.font, m_Font.size, text);
 }
 
 void container_3ds::draw_text(litehtml::uint_ptr hdc, const litehtml::tchar_t* text, litehtml::uint_ptr hFont, litehtml::web_color color, const litehtml::position& pos)
 {
-	sftd_font_extended* fnt = (sftd_font_extended*) hFont;
-
-	sftd_draw_text(fnt->ifont, pos.x, pos.y, RGBA8(color.red, color.blue, color.green, color.alpha), fnt->size, text);
+	sftd_draw_text(m_Font.font, pos.x, pos.y, RGBA8(color.red, color.blue, color.green, color.alpha), m_Font.size, text);
 }
 
 int container_3ds::pt_to_px(int pt)
@@ -81,18 +74,18 @@ int container_3ds::pt_to_px(int pt)
 
 int container_3ds::get_default_font_size() const
 {
-	return 14;
+	return 12;
 }
 
 const litehtml::tchar_t* container_3ds::get_default_font_name() const
 {
-	// unused, because we define only one kind of font.
-	return "LiberationSans-Regular";
+	// We say this is the default font, but its irrelevant.
+	return "Sans-serif";
 }
 
 void container_3ds::draw_list_marker(litehtml::uint_ptr hdc, const litehtml::list_marker& marker)
 {
-	// unused, becuase we don't need to draw bullet points in a book.
+	// current version of ebook reader does not support bullet points.
 }
 
 void container_3ds::load_image(const litehtml::tchar_t* src, const litehtml::tchar_t* baseurl, bool redraw_on_ready)
@@ -159,9 +152,19 @@ void container_3ds::transform_text(litehtml::tstring& text, litehtml::text_trans
 
 void container_3ds::import_css(litehtml::tstring& text, const litehtml::tstring& url, litehtml::tstring& baseurl)
 {
+	std::string css_url;
+	if (baseurl.empty())
+	{
+		css_url = url;
+	}
+	else
+	{
+		css_url = baseurl + url;
+	}
+
 	std::string temp = "";
 
-	std::ifstream readcss(url);
+	std::ifstream readcss(css_url);
 	
 	readcss.seekg(0, std::ios::end);
 	temp.reserve(readcss.tellg());
@@ -194,7 +197,7 @@ void container_3ds::get_client_rect(litehtml::position& client) const
 std::shared_ptr<litehtml::element>	container_3ds::create_element(const litehtml::tchar_t *tag_name, const litehtml::string_map &attributes, const std::shared_ptr<litehtml::document> &doc)
 {
 	// unused
-	return 0;
+	return nullptr;
 }
 
 void container_3ds::get_media_features(litehtml::media_features& media) const

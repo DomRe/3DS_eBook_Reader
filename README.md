@@ -17,12 +17,14 @@ Then run "build-cia.bat" or "build-cia.sh" depending on your platform.
 
 ## Credits:
 - AlbertoSonic for initial codebase and graphics.
+- cots for the new fancy artwork.
 - xerpi for SF2D, SFIL & SFTD
 - minizip for unzipping
 - tinyxml2 for xml parsing
 - BLUnzip for simplified C++ minizip
 - zlib for zip functions
 - freetype2 for font manipulation
+- litehtml for html parsing and rendering.
 - The people at #cakey
 - Source Code Pro font: https://github.com/adobe-fonts/source-code-pro
 

@@ -12,7 +12,6 @@
 
 #include "gui.h"
 #include "input.h"
-#include "rendering.h"
 #include "tinyxml2/tinyxml2.h"
 
 using namespace tinyxml2;
@@ -118,6 +117,7 @@ void Gui::HandleEventsMenu(Input& input, Renderer& ren)
 			OpenBook(selected);
 			loading = false;
 			input.curMode = 1;
+			drawAbout = false;
 		}
 	}
 
@@ -349,11 +349,11 @@ void Gui::DrawTextBG()
 	sf2d_draw_texture(m_TextBG, 0, 0);
 }
 
-void Gui::DrawBook(Gui& gui)
+void Gui::DrawBook(Gui& gui, Renderer& ren)
 {
 	if (!drawAbout)
 	{
-		book.Reader(gui);
+		book.Reader(gui, ren);
 	}
 	else
 	{

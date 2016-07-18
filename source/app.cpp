@@ -1,4 +1,8 @@
+#include <sstream>
+#include <fstream>
+#include <string>
 #include <unistd.h>
+
 #include <sf2d.h>
 #include <sftd.h>
 
@@ -29,6 +33,12 @@ void App::Init()
 	gui.Load();
 
 	input.curMode = MENU;
+
+	std::ifstream in("romfs:/master.css");
+	std::string master_css(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
+
+	ren.html_context.load_master_stylesheet(master_css.c_str());
+	ren.m_html = litehtml::document::createFromString("<html><head></head><body><p>Hello</p><p>World!</p></body></html>", &ren.c3ds, &ren.html_context);
 }
 
 void App::Event()
@@ -82,7 +92,7 @@ void App::Render()
 			ren.StartDrawingTop();
 			
 				gui.DrawTextBG();
-				gui.DrawBook(gui);
+				gui.DrawBook(gui, ren);
 				gui.DrawStatusScreen();
 			
 			ren.StopDrawing();
@@ -99,6 +109,7 @@ void App::Render()
 
 void App::End()
 {
+	ren.c3ds.Close();
 	gui.Close();
 
 	sftd_fini();

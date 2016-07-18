@@ -39,6 +39,11 @@ void Book::LoadBook(const std::string& epub)
 	ParseContainer(zp);
 	ParseOPF(zp);
 	ParsePages(zp);
+
+	bookpos.x = 0;
+	bookpos.y = 0;
+	bookpos.width = 400;
+	bookpos.height = 240;
 }
 
 void Book::ParseContainer(BLUnZip& zipfile)
@@ -89,7 +94,7 @@ void Book::ParsePages(BLUnZip& zipfile)
 	}
 
 	// spine.size(); or 7
-	for (unsigned int i = 0; i != spine.size(); i++)
+	for (unsigned int i = 0; i != 3; i++)
 	{
 		TextVisitor tv;
 
@@ -123,7 +128,7 @@ std::string Book::GetBook()
 {
 	return book;
 }
-
+/*
 void Book::Reader(Gui& gui)
 {	
 	int ypos = 20;	
@@ -136,3 +141,13 @@ void Book::Reader(Gui& gui)
 		ypos += 12;
 	}
 }	
+*/
+
+// create a vector of litehtml::document::ptr's. create once only during parsePages...
+
+
+void Book::Reader(Gui& gui, Renderer& ren)
+{	
+ 	ren.m_html->render(400);
+ 	ren.m_html->draw(nullptr, 0, 10, &bookpos);
+}    

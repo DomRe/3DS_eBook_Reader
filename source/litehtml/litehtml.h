@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../src/html.h"
-#include "../src/document.h"
-#include "../src/html_tag.h"
-#include "../src/stylesheet.h"
-#include "../src/stylesheet.h"
-#include "../src/element.h"
-#include "../src/html_tag.h"
+#include "html.h"
+#include "document.h"
+#include "html_tag.h"
+#include "stylesheet.h"
+#include "stylesheet.h"
+#include "element.h"
+#include "html_tag.h"

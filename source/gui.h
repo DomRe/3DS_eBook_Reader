@@ -9,7 +9,6 @@
 #include "book.h"
 
 class Input;
-class Renderer;
 
 class Gui
 {
@@ -33,7 +32,7 @@ public:
 	void CloseBook();
 
 	// Top Screen
-	void DrawBook(Gui& gui);
+	void DrawBook(Gui& gui, Renderer& ren);
 
 	// Bottom Screen
 	void DrawControls();
