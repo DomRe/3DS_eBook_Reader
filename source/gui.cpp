@@ -114,7 +114,7 @@ void Gui::HandleEventsMenu(Input& input, Renderer& ren)
 	{
 		if (selected != "")
 		{
-			OpenBook(selected);
+			OpenBook(selected, ren);
 			loading = false;
 			input.curMode = 1;
 			drawAbout = false;
@@ -161,14 +161,6 @@ void Gui::HandleEventsMenu(Input& input, Renderer& ren)
 	if (input.m_PosX >= 0 && input.m_PosX <= 158 && input.m_PosY >= 217 && input.m_PosY <= 241) {
 		input.running = false;
 	}
-
-	if (input.m_PosX >= 1 && input.m_PosX <= 20 && input.m_PosY >= 1 && input.m_PosY <= 20) {
-		if (ren.draw3D == true) {
-			ren.draw3D = false;
-		} else {
-			ren.draw3D = true;
-		}
-	}
 }
 
 void Gui::HandleEventsBook(Input& input)
@@ -183,16 +175,21 @@ void Gui::HandleEventsBook(Input& input)
 		}
 		else
 		{
-			if (input.m_kDown & KEY_LEFT) { m_BookPage--; }
-			if (input.m_kDown & KEY_RIGHT) { m_BookPage++; }
+			if (input.m_kDown & KEY_UP) { m_BookPageY -= 10; }
+			if (input.m_kDown & KEY_DOWN) { m_BookPageY += 10; }
+			if (input.m_kDown & KEY_L) { m_BookPageY -= 10; }
+			if (input.m_kDown & KEY_R) { m_BookPageY += 10; }
+			if (input.m_kDown & KEY_LEFT) { m_bookVectorPos--; }
+			if (input.m_kDown & KEY_RIGHT) { m_bookVectorPos++; }
 
-			if (m_BookPage < 0) { m_BookPage = 0; }
+			if (m_bookVectorPos < 0) { m_bookVectorPos = 0; }
+			if (m_BookPageY < 10) { m_BookPageY = 10; }
 
 			if (input.m_PosX >= 20 && input.m_PosX <= 103 && input.m_PosY >= 18 && input.m_PosY <= 185) {
 				input.curMode = 0;
 				CloseBook();
 				selected = "";
-				m_BookPage = 0;
+				m_BookPageY = 0;
 			}
 
 			if (input.m_PosX >= 120 && input.m_PosX <= 203 && input.m_PosY >= 18 && input.m_PosY <= 185) {
@@ -220,7 +217,7 @@ void Gui::HandleEventsBook(Input& input)
 		if (input.m_kDown & KEY_X) { RemoveBookmark(m_IndexBookmark+(7*m_curPageBookmark)); }
 
 		if (input.m_kDown & KEY_A) { 
-			m_BookPage = bookmarkedPages[m_IndexBookmark+(7*m_curPageBookmark)]; 
+			m_BookPageY = bookmarkedPages[m_IndexBookmark+(7*m_curPageBookmark)]; 
 		}
 
 		if (input.m_PosX >= 159 && input.m_PosX <= 320 && input.m_PosY >= 217 && input.m_PosY <= 241) {
@@ -290,15 +287,6 @@ void Gui::DrawFileSelect(Renderer& ren)
 	{
 		sftd_draw_text(m_Font, (320 / 2) - ( sftd_get_text_width(m_Font, 12, "Loading...") / 2), 100, RGBA8(0, 0, 0, 255), 12, "Loading...");
 	}
-
-	if (ren.draw3D == true)
-	{
-		sftd_draw_text(m_Font, 0, 0, RGBA8(255, 0, 0, 255), 14, "3D");
-	}
-	else
-	{
-		sftd_draw_text(m_Font, 0, 0, RGBA8(0, 0, 0, 255), 14, "3D");
-	}
 }
 
 std::string Gui::getSelected()
@@ -332,11 +320,11 @@ void Gui::DrawStatusScreen()
     }
 }
 
-void Gui::OpenBook(const std::string& bookName)
+void Gui::OpenBook(const std::string& bookName, Renderer& ren)
 {
 	std::string fullBook = "/books/"+bookName;
 
-	book.LoadBook(fullBook.c_str());
+	book.LoadBook(fullBook.c_str(), ren);
 }
 
 void Gui::CloseBook()
@@ -468,7 +456,7 @@ void Gui::SaveBookmark()
 		bookmarkElement->SetAttribute("book", selected.c_str());
 
 		// insert bookmark
-		bookmarkElement->SetAttribute("page", m_BookPage);
+		bookmarkElement->SetAttribute("page", m_BookPageY);
 		root->InsertEndChild(bookmarkElement);
 
 		doc.SaveFile("/books/bookmarks.xml");
@@ -491,7 +479,7 @@ void Gui::SaveBookmark()
 		bookmarkElement->SetAttribute("book", selected.c_str());
 
 		// insert bookmark
-		bookmarkElement->SetAttribute("page", m_BookPage);
+		bookmarkElement->SetAttribute("page", m_BookPageY);
 		root->InsertEndChild(bookmarkElement);
 
 		doc.SaveFile("/books/bookmarks.xml");
@@ -503,9 +491,14 @@ sftd_font* Gui::getTextFont()
 	return m_TextFont;
 }
 
-int Gui::getBookPage()
+int Gui::getBookPageY()
 {
-	return m_BookPage;
+	return m_BookPageY;
+}
+
+int Gui::getBookVectorPos()
+{
+	return m_bookVectorPos;
 }
 
 std::string Gui::clock()

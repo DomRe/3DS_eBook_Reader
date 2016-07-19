@@ -38,7 +38,6 @@ void App::Init()
 	std::string master_css(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
 
 	ren.html_context.load_master_stylesheet(master_css.c_str());
-	ren.m_html = litehtml::document::createFromString("<html><head></head><body><p>Hello</p><p>World!</p></body></html>", &ren.c3ds, &ren.html_context);
 }
 
 void App::Event()

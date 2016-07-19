@@ -17,11 +17,11 @@ class Book
 public:
 	~Book();
 
-	void LoadBook(const std::string& epub);
+	void LoadBook(const std::string& epub, Renderer& ren);
 
 	void ParseContainer(BLUnZip& zipfile);
 	void ParseOPF(BLUnZip& zipfile);
-	void ParsePages(BLUnZip& zipfile);
+	void ParsePages(BLUnZip& zipfile, Renderer& ren);
 
 	void Reader(Gui& gui, Renderer& ren);
 	void CloseBook();
@@ -31,9 +31,6 @@ private:
 	std::string book = "";
 	std::string opf = "";
 
-	// supports everything but the '\' character.
-	std::string valid = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$^&*()\"_+[];,./{}|:<>'?%";
-
 public:
 	// id, href
 	std::unordered_map<std::string, std::string> manifest;
@@ -41,10 +38,8 @@ public:
 	// order of book
 	std::vector<std::string> spine;
 
-	// All the text in the book.
-	std::vector<std::string> alltext;
-
-	//litehtml::document::ptr m_html;
+	// The html pages in the book
+	std::vector<litehtml::document*> content;
 	litehtml::position bookpos;
 };
 

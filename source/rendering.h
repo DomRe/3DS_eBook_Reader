@@ -12,11 +12,8 @@ public:
 	void StopDrawing();
 	void Render();
 
-	bool draw3D = false;
-
-	litehtml::context html_context;
 	container_3ds c3ds;
-	litehtml::document::ptr m_html;
+	litehtml::context html_context;
 };
 
 #endif

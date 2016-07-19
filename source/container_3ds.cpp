@@ -24,6 +24,11 @@ void container_3ds::Close()
 	}
 }
 
+void container_3ds::SetCSS(const std::string& cssText)
+{
+	css = cssText;
+}
+
 litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration, litehtml::font_metrics* fm)
 {
 	// very simple support for fonts in early stage, so we dont give a damn about the type of font it is...
@@ -152,28 +157,7 @@ void container_3ds::transform_text(litehtml::tstring& text, litehtml::text_trans
 
 void container_3ds::import_css(litehtml::tstring& text, const litehtml::tstring& url, litehtml::tstring& baseurl)
 {
-	std::string css_url;
-	if (baseurl.empty())
-	{
-		css_url = url;
-	}
-	else
-	{
-		css_url = baseurl + url;
-	}
-
-	std::string temp = "";
-
-	std::ifstream readcss(css_url);
-	
-	readcss.seekg(0, std::ios::end);
-	temp.reserve(readcss.tellg());
-	readcss.seekg(0, std::ios::beg);
-
-	temp.assign((std::istreambuf_iterator<char>(readcss)),
-            std::istreambuf_iterator<char>());
-
-	text = temp;
+	text = css;
 }
 
 void container_3ds::set_clip(const litehtml::position& pos, const litehtml::border_radiuses& bdr_radius, bool valid_x, bool valid_y)

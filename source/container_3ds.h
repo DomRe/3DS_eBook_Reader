@@ -43,9 +43,10 @@ public:
 	void				get_language(litehtml::tstring& language, litehtml::tstring & culture) const override;
 
 	void Close();
-
+	void SetCSS(const std::string& cssText);
 private:
 	sftd_font_extended m_Font; // dont forget to clean this up!
+	std::string css;
 };
 
 #endif

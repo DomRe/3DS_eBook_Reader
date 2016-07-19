@@ -28,7 +28,7 @@ public:
 	// Bottom Screen
 	void DrawFileSelect(Renderer& ren);
 
-	void OpenBook(const std::string& bookName);
+	void OpenBook(const std::string& bookName, Renderer& ren);
 	void CloseBook();
 
 	// Top Screen
@@ -41,7 +41,8 @@ public:
 
 	sftd_font* getTextFont();
 
-	int getBookPage();
+	int getBookPageY();
+	int getBookVectorPos();
 
 private:
 	Book book;
@@ -50,7 +51,8 @@ private:
 	int m_curPage = 0;
 	int m_IndexBookmark = 0;
 	int m_curPageBookmark = 0;
-	int m_BookPage = 0;
+	int m_BookPageY = 10;
+	int m_bookVectorPos = 0;
 	unsigned int begin = 0;
 	unsigned int end = 7;
 	unsigned int beginBookmark = 0;
