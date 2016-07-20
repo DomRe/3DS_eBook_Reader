@@ -18,14 +18,12 @@ Book::~Book()
 {
 	manifest.clear();
 	spine.clear();
-	content.clear();
 }
 
 void Book::CloseBook()
 {
 	manifest.clear();
 	spine.clear();
-	content.clear();
 
 	book = "";
 	opf = "";	
@@ -34,21 +32,23 @@ void Book::CloseBook()
 void Book::LoadBook(const std::string& epub, Renderer& ren)
 {
 	book = epub;
-	BLUnZip zp(book);
+	zipfile = std::shared_ptr<BLUnZip>(new BLUnZip(book));
 
-	ParseContainer(zp);
-	ParseOPF(zp);
-	ParsePages(zp, ren);
+	ParseContainer();
+    ParseOPF(ren);
 
 	bookpos.x = 0;
 	bookpos.y = 0;
 	bookpos.width = 400;
 	bookpos.height = 240;
+
+	curpage = 0;
+    ParsePage(curpage, ren);
 }
 
-void Book::ParseContainer(BLUnZip& zipfile)
+void Book::ParseContainer()
 {
-	std::string unclean( zipfile.ExtractToString("META-INF/container.xml") );
+	std::string unclean( zipfile->ExtractToString("META-INF/container.xml") );
 
 	XMLDocument doc;
     doc.Parse( unclean.c_str() );
@@ -60,9 +60,9 @@ void Book::ParseContainer(BLUnZip& zipfile)
     opf = rootfile->Attribute("full-path");
 }
 
-void Book::ParseOPF(BLUnZip& zipfile)
+void Book::ParseOPF(Renderer& ren)
 {
-	std::string unclean( zipfile.ExtractToString( opf ) );
+	std::string unclean( zipfile->ExtractToString( opf ) );
 	
 	XMLDocument doc;
     doc.Parse( unclean.c_str() );
@@ -83,21 +83,20 @@ void Book::ParseOPF(BLUnZip& zipfile)
 	{
 		spine.push_back(rfe->Attribute("idref"));
 	}
+
+	ren.c3ds.SetCSS(zipfile->ExtractToString(manifest["css"]));
 }
 
-void Book::ParsePages(BLUnZip& zipfile, Renderer& ren)
+void Book::ParsePage(unsigned int pagenum, Renderer& ren)
 {
-	content.clear(); // ensure its empty.
+    std::string page(zipfile->ExtractToString(manifest[spine[pagenum]]));
+    content = litehtml::document::createFromUTF8(page.c_str(), &ren.c3ds, &ren.html_context);
+    content->render(400);
+}
 
-	ren.c3ds.SetCSS(zipfile.ExtractToString(manifest["css"]));
-
-	// spine.size()
-	for (unsigned int i = 0; i != 5; i++)
-	{
-		std::string page ( zipfile.ExtractToString( manifest[spine[i]]) );
-		litehtml::document::ptr html = litehtml::document::createFromUTF8(page.c_str(), &ren.c3ds, &ren.html_context);
-		content.push_back(html.get());
-	}	
+unsigned int Book::GetPageCount() const
+{
+	return spine.size();
 }
 
 std::string Book::GetBook()
@@ -107,6 +106,11 @@ std::string Book::GetBook()
 
 void Book::Reader(Gui& gui, Renderer& ren)
 {	
-	content[gui.getBookVectorPos()]->render(400);
- 	content[gui.getBookVectorPos()]->draw(nullptr, 0, gui.getBookPageY(), &bookpos);
+	if((int)gui.getBookVectorPos() != curpage)
+	{
+		curpage = gui.getBookVectorPos();
+		ParsePage(curpage, ren);
+	}
+
+	content->draw(0, 0, -gui.getBookPageY(), &bookpos);
 }    

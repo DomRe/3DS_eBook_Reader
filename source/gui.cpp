@@ -179,10 +179,11 @@ void Gui::HandleEventsBook(Input& input)
 			if (input.m_kDown & KEY_DOWN) { m_BookPageY += 10; }
 			if (input.m_kDown & KEY_L) { m_BookPageY -= 10; }
 			if (input.m_kDown & KEY_R) { m_BookPageY += 10; }
-			if (input.m_kDown & KEY_LEFT) { m_bookVectorPos--; }
-			if (input.m_kDown & KEY_RIGHT) { m_bookVectorPos++; }
+            if (input.m_kDown & KEY_LEFT) { m_bookVectorPos--; m_BookPageY = 0;}
+            if (input.m_kDown & KEY_RIGHT) { m_bookVectorPos++; m_BookPageY = 0;}
 
 			if (m_bookVectorPos < 0) { m_bookVectorPos = 0; }
+			if (m_bookVectorPos >= (int)book.GetPageCount()) { m_bookVectorPos = book.GetPageCount() - 1; }
 			if (m_BookPageY < 10) { m_BookPageY = 10; }
 
 			if (input.m_PosX >= 20 && input.m_PosX <= 103 && input.m_PosY >= 18 && input.m_PosY <= 185) {
@@ -271,7 +272,7 @@ void Gui::DrawFileSelect(Renderer& ren)
 			end = files.size();
 		}
 
-		for (begin = begin; begin < end; ++begin) {
+        for (; begin < end; ++begin) {
 			sftd_draw_text(m_Font, 57, pos, RGBA8(0, 0, 0 ,255), 12, files[begin].c_str());
 			pos += 20;
 		}
@@ -323,7 +324,8 @@ void Gui::DrawStatusScreen()
 void Gui::OpenBook(const std::string& bookName, Renderer& ren)
 {
 	std::string fullBook = "/books/"+bookName;
-
+	m_bookVectorPos = 0;
+	
 	book.LoadBook(fullBook.c_str(), ren);
 }
 
@@ -374,7 +376,7 @@ void Gui::DrawControls()
 			endBookmark = bookmarkedPages.size();
 		}
 
-		for (beginBookmark = beginBookmark; beginBookmark < endBookmark; ++beginBookmark) {
+		for (; beginBookmark < endBookmark; ++beginBookmark) {
 			std::string bob = "Page " + to_string<int>(bookmarkedPages[beginBookmark]); 
 			sftd_draw_text(m_Font, 57, pos, RGBA8(0, 0, 0 ,255), 12, bob.c_str());
 			pos += 20;

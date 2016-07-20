@@ -7,6 +7,13 @@
 
 struct sftd_font_extended
 {
+	sftd_font_extended()
+    : font(nullptr)
+    , size(0)
+    , underline(false)
+    , strikeout(false)
+    {}
+
 	sftd_font* font;
 	int size;
 	bool underline;
@@ -16,6 +23,8 @@ struct sftd_font_extended
 class container_3ds : public litehtml::document_container
 {
 public:
+	virtual ~container_3ds();
+
 	litehtml::uint_ptr	create_font(const litehtml::tchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration, litehtml::font_metrics* fm) override;
 	void				delete_font(litehtml::uint_ptr hFont) override;
 	int					text_width(const litehtml::tchar_t* text, litehtml::uint_ptr hFont) override;
@@ -45,7 +54,7 @@ public:
 	void Close();
 	void SetCSS(const std::string& cssText);
 private:
-	sftd_font_extended m_Font; // dont forget to clean this up!
+	static sftd_font_extended m_Font;
 	std::string css;
 };
 

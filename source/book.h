@@ -19,12 +19,14 @@ public:
 
 	void LoadBook(const std::string& epub, Renderer& ren);
 
-	void ParseContainer(BLUnZip& zipfile);
-	void ParseOPF(BLUnZip& zipfile);
-	void ParsePages(BLUnZip& zipfile, Renderer& ren);
+	void ParseContainer();
+	void ParseOPF();
+	void ParsePages(unsigned int pagenum, Renderer& ren);
 
 	void Reader(Gui& gui, Renderer& ren);
 	void CloseBook();
+
+	unsigned int GetPageCount() const;
 
 	std::string GetBook();
 private:
@@ -32,6 +34,8 @@ private:
 	std::string opf = "";
 
 public:
+	std::shared_ptr<BLUnZip> zipfile;
+
 	// id, href
 	std::unordered_map<std::string, std::string> manifest;
 
@@ -39,8 +43,10 @@ public:
 	std::vector<std::string> spine;
 
 	// The html pages in the book
-	std::vector<litehtml::document*> content;
+	litehtml::document::ptr content;
 	litehtml::position bookpos;
+
+	int curpage;
 };
 
 #endif

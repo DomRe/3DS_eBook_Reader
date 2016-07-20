@@ -16,6 +16,13 @@
 
 #define FT_CEIL(X)  (((X + 63) & -64) / 64)
 
+sftd_font_extended container_3ds::m_Font;
+
+container_3ds::~container_3ds()
+{
+
+}
+
 void container_3ds::Close()
 {
 	if(m_Font.font)
@@ -31,35 +38,43 @@ void container_3ds::SetCSS(const std::string& cssText)
 
 litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration, litehtml::font_metrics* fm)
 {
-	// very simple support for fonts in early stage, so we dont give a damn about the type of font it is...
-	m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
-
-	FTC_FaceID face_id = (FTC_FaceID)m_Font.font;
-	FT_Face face;
-	FTC_Manager_LookupFace(sftd_get_manager(m_Font.font), face_id, &face);
-	m_Font.size = 12; // = size;
-
-	int scale = face->size->metrics.y_scale;
-
-	FT_Load_Glyph(face, FT_Get_Char_Index(face, 'x'), FT_LOAD_DEFAULT);
-
-	int ascent = FT_CEIL(FT_MulFix(face->ascender, scale));
-	int descent = FT_CEIL(FT_MulFix(face->descender, scale));
-
-	fm->ascent = ascent;
-	fm->descent = descent;
-	fm->height = ascent - descent + 1;
-	fm->x_height = face->glyph->metrics.height;
-
-	m_Font.strikeout = false;
-	m_Font.underline = false;
+	if(!m_Font.font)
+	{
+        // very simple support for fonts in early stage, so we dont give a damn about the type of font it is...
+        m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
+ 
+        FTC_FaceID face_id = (FTC_FaceID)m_Font.font;
+        FT_Face face;
+        FTC_Manager_LookupFace(m_Font.font->ftcmanager, face_id, &face);
+        m_Font.size = 12; // = size;
+ 
+        FTC_ScalerRec scaler;
+        scaler.face_id = face_id;
+        scaler.width = 0;
+        scaler.height = m_Font.size << 6;
+        scaler.pixel = 0;
+        scaler.x_res = 72;
+        scaler.y_res = 72;
+ 
+        FT_Size font_size;
+        FTC_Manager_LookupSize(m_Font.font->ftcmanager, &scaler, &font_size);
+        FT_Load_Glyph(face, FT_Get_Char_Index(face, 'x'), FT_LOAD_NO_BITMAP);
+ 
+        fm->ascent = face->ascender;
+        fm->descent = face->descender;
+        fm->height = face->ascender - face->descender + 1;
+        fm->x_height = face->glyph->metrics.height;
+ 
+        m_Font.strikeout = false;
+        m_Font.underline = false;
+    }
 
 	return (litehtml::uint_ptr)(&m_Font);
 }
 
 void container_3ds::delete_font(litehtml::uint_ptr hFont)
 {
-	Close();
+
 }
 
 int container_3ds::text_width(const litehtml::tchar_t* text, litehtml::uint_ptr hFont)

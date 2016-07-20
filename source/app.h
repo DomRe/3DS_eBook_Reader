@@ -16,7 +16,7 @@ public:
 
 	void End();
 
-public:
+private:
 	Input input;
 	Renderer ren;
 	Gui gui;
