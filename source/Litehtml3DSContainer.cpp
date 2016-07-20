@@ -16,8 +16,6 @@
 
 #define FT_CEIL(X)  (((X + 63) & -64) / 64)
 
-sftd_font_extended container_3ds::m_Font;
-
 container_3ds::~container_3ds()
 {
 

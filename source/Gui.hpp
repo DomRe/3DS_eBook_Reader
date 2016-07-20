@@ -1,12 +1,15 @@
-#ifndef GUI_H
-#define GUI_H
+// Gui.hpp
+// UI management class
+
+#ifndef EBOOK_GUI_HPP_
+#define EBOOK_GUI_HPP_
 
 #include <3ds.h>
 
 #include <sf2d.h>
 #include <sftd.h>
 
-#include "book.h"
+#include "Book.hpp"
 
 class Input;
 

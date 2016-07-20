@@ -1,20 +1,21 @@
+// App.cpp
+// Main application class
+
+#include <unistd.h>
+
+#include <string>
 #include <sstream>
 #include <fstream>
-#include <string>
-#include <unistd.h>
 
 #include <sf2d.h>
 #include <sftd.h>
 
-#include "app.h"
+#include "App.hpp"
+#include "Time.hpp"
 
-#define MENU 0
-#define TEXT 1
-
-int MilliToMicro(int millis)
-{
-	return millis * 1000;
-}
+#ifndef EXIT_SUCCESS
+	#define EXIT_SUCCESS 0
+#endif
 
 void App::Init()
 {
@@ -24,92 +25,90 @@ void App::Init()
 	ptmuInit();
 	hidInit();
 
+	// Initialize sf2d
 	sf2d_init();
 	sf2d_set_clear_color(RGBA8(0, 0, 0, 255));
 	sf2d_set_vblank_wait(0);
 	
 	sftd_init();
 	
-	gui.Load();
+	m_gui.Load();
 
-	input.curMode = MENU;
+	m_input.SetCurMode(AppState::Menu);
 
 	std::ifstream in("romfs:/master.css");
 	std::string master_css(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
 
-	ren.html_context.load_master_stylesheet(master_css.c_str());
+	m_ren.html_context.load_master_stylesheet(master_css.c_str());
 }
 
 void App::Event()
 {
-	input.HandleEvents();
+	m_input.HandleEvents();
 
-	// delay program to allow 3ds hardware to catch up.
-	usleep(MilliToMicro(50));
-
-	if (input.m_kDown & KEY_START) {
-		input.running = false;
+	if (m_input.getKeyDown() & KEY_START) {
+		m_input.SetRunning(false);
 	}
 
-	switch (input.curMode)
+	switch (m_input.CurMode())
 	{
-		case MENU:
-			gui.HandleEventsMenu(input, ren);	
+		case AppState::Menu:
+			m_gui.HandleEventsMenu(m_input, m_ren);	
 		break;
 
-		case TEXT:
-			gui.HandleEventsBook(input);
+		case AppState::Text:
+			m_gui.HandleEventsBook(m_input);
 		break;
 	}
 }
 
 void App::Update()
 {
-	gui.Update();
+	m_gui.Update();
 }
 
-void App::Render()
+void App::m_render()
 {
-	switch (input.curMode)
+	switch (m_input.CurMode())
 	{
-		case MENU:
-			ren.StartDrawingTop();
+		case AppState::Menu:
+			m_ren.StartDrawingTop();
 
-				gui.DrawTopBackground();
-				gui.DrawStatusScreen();
+				m_gui.DrawTopBackground();
+				m_gui.DrawStatusScreen();
 				
-			ren.StopDrawing();
-			ren.StartDrawingBottom();
+			m_ren.StopDrawing();
+			m_ren.StartDrawingBottom();
 
-				gui.DrawFileSelect(ren);
+				m_gui.DrawFileSelect(m_ren);
 
-			ren.StopDrawing();
-			ren.Render();
+			m_ren.StopDrawing();
+			m_ren.m_render();
 		break;
 
-		case TEXT:
-			ren.StartDrawingTop();
+		case AppState::Text:
+			m_ren.StartDrawingTop();
 			
-				gui.DrawTextBG();
-				gui.DrawBook(gui, ren);
-				gui.DrawStatusScreen();
+				m_gui.DrawTextBG();
+				m_gui.DrawBook(m_gui, m_ren);
+				m_gui.DrawStatusScreen();
 			
-			ren.StopDrawing();
+			m_ren.StopDrawing();
 
-			ren.StartDrawingBottom();
+			m_ren.StartDrawingBottom();
 			
-				gui.DrawControls();
+				m_gui.DrawControls();
 				
-			ren.StopDrawing();
-			ren.Render();
+			m_ren.StopDrawing();
+			m_ren.m_render();
 		break;
 	}
 }
 
 void App::End()
 {
-	ren.c3ds.Close();
-	gui.Close();
+	m_ren.getC3DS().Close();
+	m_gui.Close();
 
 	sftd_fini();
 	sf2d_fini();
@@ -118,4 +117,49 @@ void App::End()
 	ptmuExit();
 	aptExit();
 	romfsExit();
+}
+
+void App::Run()
+{
+	uint64_t lastTime = re::NanoTime();
+		
+	double delta = 0.0;
+	const double ns = 1000000000.0 / 60.0;
+	uint64_t timer = re::MillisTime();
+	int frames = 0;
+	int updates = 0;
+
+	Init();
+
+	while (m_input.IsRunning())
+	{
+		uint64_t now = re::NanoTime();
+		delta += (now - lastTime) / ns;
+		lastTime = now;
+		
+		aptMainLoop();
+		if (delta >= 1.0)
+		{		
+			Event();
+			Update();
+			
+			updates++;
+			delta--;
+		}
+
+		m_render();
+		frames++;
+
+		if ((re::MillisTime() - timer) > 1000)
+		{
+			timer += 1000;
+
+			updates = 0;
+			frames = 0;
+		}
+	}
+
+	End();
+
+	return EXIT_SUCCESS;
 }

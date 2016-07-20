@@ -1,21 +1,11 @@
-#include "app.h"
+// main.cpp
+// entry point
+
+#include "App.hpp"
 
 int main()
 {
-	App app;
+	App app;	
 
-	app.Init();
-
-	while (app.input.running)
-	{
-		aptMainLoop();
-		
-		app.Event();
-		app.Update();
-		app.Render();
-	}
-	
-	app.End();
-
-	return 0;
+	return app.Run();
 }

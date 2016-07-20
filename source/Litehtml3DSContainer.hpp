@@ -54,7 +54,7 @@ public:
 	void Close();
 	void SetCSS(const std::string& cssText);
 private:
-	static sftd_font_extended m_Font;
+	sftd_font_extended m_Font;
 	std::string css;
 };
 
