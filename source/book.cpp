@@ -1,54 +1,53 @@
-// http://ideveloperworld.blogspot.com.au/2011/02/epub-reader.html
+// Book.hpp
+// Manages the ebook.
 
-// #include "tidy.h"
-// #include "tidybuffio.h"
-
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <cmath>
 #include <numeric>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 
-#include "gui.h" // includes book.h
+#include "Gui.hpp" // includes book.h
 #include "tinyxml2/tinyxml2.h"
 
 using namespace tinyxml2;
 
 Book::~Book()
 {
-	manifest.clear();
-	spine.clear();
+	m_manifest.clear();
+	m_spine.clear();
 }
 
 void Book::CloseBook()
 {
-	manifest.clear();
-	spine.clear();
+	m_manifest.clear();
+	m_spine.clear();
 
-	book = "";
-	opf = "";	
+	m_book = "";
+	m_opf = "";	
 }
 
 void Book::LoadBook(const std::string& epub, Renderer& ren)
 {
-	book = epub;
-	zipfile = std::shared_ptr<BLUnZip>(new BLUnZip(book));
+	m_book = epub;
+	m_zipfile = std::shared_ptr<BLUnZip>(new BLUnZip(m_book));
 
 	ParseContainer();
     ParseOPF(ren);
 
-	bookpos.x = 0;
-	bookpos.y = 0;
-	bookpos.width = 400;
-	bookpos.height = 240;
+    // basically screen width
+	m_bookpos.x = 0;
+	m_bookpos.y = 0;
+	m_bookpos.width = 400;
+	m_bookpos.height = 240;
 
-	curpage = 0;
-    ParsePage(curpage, ren);
+	m_curpage = 0;
+    ParsePage(m_curpage, ren);
 }
 
 void Book::ParseContainer()
 {
-	std::string unclean( zipfile->ExtractToString("META-INF/container.xml") );
+	std::string unclean( m_zipfile->ExtractToString("META-INF/container.xml") );
 
 	XMLDocument doc;
     doc.Parse( unclean.c_str() );
@@ -57,12 +56,12 @@ void Book::ParseContainer()
     XMLElement* rootfiles = container->FirstChildElement( "rootfiles" );
     XMLElement* rootfile = rootfiles->FirstChildElement( "rootfile" );
 
-    opf = rootfile->Attribute("full-path");
+    m_opf = rootfile->Attribute("full-path");
 }
 
 void Book::ParseOPF(Renderer& ren)
 {
-	std::string unclean( zipfile->ExtractToString( opf ) );
+	std::string unclean( m_zipfile->ExtractToString( m_opf ) );
 	
 	XMLDocument doc;
     doc.Parse( unclean.c_str() );
@@ -73,7 +72,7 @@ void Book::ParseOPF(Renderer& ren)
 
 	for(XMLElement* rfe = item; rfe != nullptr; rfe = rfe->NextSiblingElement("item"))
 	{
-    	manifest.emplace(rfe->Attribute("id"), rfe->Attribute("href"));
+    	m_manifest.emplace(rfe->Attribute("id"), rfe->Attribute("href"));
 	}
 
 	XMLElement* spine_ = package->FirstChildElement("spine");
@@ -81,36 +80,36 @@ void Book::ParseOPF(Renderer& ren)
 
 	for (XMLElement* rfe = itemref; rfe != nullptr; rfe = rfe->NextSiblingElement("itemref"))
 	{
-		spine.push_back(rfe->Attribute("idref"));
+		m_spine.push_back(rfe->Attribute("idref"));
 	}
 
-	ren.c3ds.SetCSS(zipfile->ExtractToString(manifest["css"]));
+	ren.m_c3ds.SetCSS(m_zipfile->ExtractToString(m_manifest["css"]));
 }
 
 void Book::ParsePage(unsigned int pagenum, Renderer& ren)
 {
-    std::string page(zipfile->ExtractToString(manifest[spine[pagenum]]));
-    content = litehtml::document::createFromUTF8(page.c_str(), &ren.c3ds, &ren.html_context);
-    content->render(400);
+    std::string page(m_zipfile->ExtractToString(m_manifest[m_spine[pagenum]]));
+    m_content = litehtml::document::createFromUTF8(page.c_str(), &ren.m_c3ds, &ren.m_htmlContext);
+    m_content->render(400);
 }
 
 unsigned int Book::GetPageCount() const
 {
-	return spine.size();
+	return m_spine.size();
 }
 
 std::string Book::GetBook()
 {
-	return book;
+	return m_book;
 }
 
 void Book::Reader(Gui& gui, Renderer& ren)
 {	
-	if((int)gui.getBookVectorPos() != curpage)
+	if((int)gui.getBookVectorPos() != m_curpage)
 	{
-		curpage = gui.getBookVectorPos();
-		ParsePage(curpage, ren);
+		m_curpage = gui.getBookVectorPos();
+		ParsePage(m_curpage, ren);
 	}
 
-	content->draw(0, 0, -gui.getBookPageY(), &bookpos);
+	m_content->draw(0, 0, -gui.getBookPageY(), &m_bookpos);
 }    

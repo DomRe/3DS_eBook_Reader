@@ -39,7 +39,7 @@ void App::Init()
 	std::ifstream in("romfs:/master.css");
 	std::string master_css(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
 
-	m_ren.html_context.load_master_stylesheet(master_css.c_str());
+	m_ren.m_htmlContext.load_master_stylesheet(master_css.c_str());
 }
 
 void App::Event()
@@ -67,7 +67,7 @@ void App::Update()
 	m_gui.Update();
 }
 
-void App::m_render()
+void App::Render()
 {
 	switch (m_input.CurMode())
 	{
@@ -83,7 +83,7 @@ void App::m_render()
 				m_gui.DrawFileSelect(m_ren);
 
 			m_ren.StopDrawing();
-			m_ren.m_render();
+			m_ren.Render();
 		break;
 
 		case AppState::Text:
@@ -100,14 +100,14 @@ void App::m_render()
 				m_gui.DrawControls();
 				
 			m_ren.StopDrawing();
-			m_ren.m_render();
+			m_ren.Render();
 		break;
 	}
 }
 
 void App::End()
 {
-	m_ren.getC3DS().Close();
+	m_ren.m_c3ds.Close();
 	m_gui.Close();
 
 	sftd_fini();
@@ -119,7 +119,7 @@ void App::End()
 	romfsExit();
 }
 
-void App::Run()
+int App::Run()
 {
 	uint64_t lastTime = re::NanoTime();
 		
@@ -147,7 +147,7 @@ void App::Run()
 			delta--;
 		}
 
-		m_render();
+		Render();
 		frames++;
 
 		if ((re::MillisTime() - timer) > 1000)

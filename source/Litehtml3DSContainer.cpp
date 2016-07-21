@@ -1,7 +1,10 @@
-#include <algorithm>
+// Litehtml3DSContainer.hpp
+// Layer between litehtml and nintendo 3ds
+
 #include <string> 
 #include <fstream>
 #include <streambuf>
+#include <algorithm>
 
 #include <sf2d.h>
 
@@ -10,11 +13,33 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include "container_3ds.h"
+#include "Litehtml3DSContainer.hpp"
 
 #define PPI_3DS 132.1
 
 #define FT_CEIL(X)  (((X + 63) & -64) / 64)
+
+typedef struct texture_atlas texture_atlas;
+
+typedef enum {
+   SFTD_LOAD_FROM_FILE,
+   SFTD_LOAD_FROM_MEM
+} sftd_font_load_from;
+
+struct sftd_font {
+   sftd_font_load_from from;
+   union {
+       char *filename;
+       struct {
+           const void *font_buffer;
+           unsigned int buffer_size;
+       };
+   };
+   FTC_Manager ftcmanager;
+   FTC_CMapCache cmapcache;
+   FTC_ImageCache imagecache;
+   texture_atlas *tex_atlas;
+};
 
 container_3ds::~container_3ds()
 {
@@ -39,7 +64,18 @@ litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName,
 	if(!m_Font.font)
 	{
         // very simple support for fonts in early stage, so we dont give a damn about the type of font it is...
-        m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
+		FILE* fp = fopen("/books/myfont.ttf", "r");
+
+		if (fp)
+		{
+			m_Font.font = sftd_load_font_file("/books/myfont.ttf");
+		}
+		else
+		{
+			m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
+		}
+
+		fclose(fp);
  
         FTC_FaceID face_id = (FTC_FaceID)m_Font.font;
         FT_Face face;

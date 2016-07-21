@@ -24,13 +24,3 @@ void Renderer::Render()
 {
 	sf2d_swapbuffers();
 }
-
-container_3ds& Renderer::getC3DS() const
-{
-	return m_c3ds;
-}
-
-litehtml::context& Renderer::getContext() const
-{
-	return m_htmlContext;
-}

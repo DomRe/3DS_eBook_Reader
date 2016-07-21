@@ -44,14 +44,14 @@ public:
 	* EXPORTS: none
 	* PURPOSE: Change the current app state.
 	*/
-	void SetCurMode(AppState& as);
+	void SetCurMode(AppState as);
 
 	/*
 	* IMPORTS: none
 	* EXPORTS: boolean. True if running.
 	* PURPOSE: Is the application still running.
 	*/
-	AppState& CurMode() const;
+	AppState CurMode() const;
 
 	/*
 	* IMPORTS: none

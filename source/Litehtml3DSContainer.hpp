@@ -1,5 +1,8 @@
-#ifndef CONTAINER3DS_H
-#define CONTAINER3DS_H
+// Litehtml3DSContainer.hpp
+// Layer between litehtml and nintendo 3ds
+
+#ifndef EBOOK_LITEHTML3DSCONTAINER_HPP_
+#define EBOOK_LITEHTML3DSCONTAINER_HPP_
 
 #include <sftd.h>
 

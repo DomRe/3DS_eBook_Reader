@@ -6,8 +6,8 @@
 
 enum AppState
 {
-	MENU,
-	TEXT
-}
+	Menu,
+	Text
+};
 
 #endif

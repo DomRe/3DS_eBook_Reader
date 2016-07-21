@@ -13,14 +13,14 @@ namespace re
 	* EXPORTS: none
 	* PURPOSE: Use the high resolution clock to get the time. Use this to get time difference in loops.
 	*/
-	static uint64_t NanoTime();
+	uint64_t NanoTime();
 
 	/*
 	* IMPORTS: none
 	* EXPORTS: none
 	* PURPOSE: Get the current system time in milliseconds.
 	*/
-	static uint64_t MillisTime();
+	uint64_t MillisTime();
 }
 
 #endif

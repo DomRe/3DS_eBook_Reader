@@ -37,21 +37,10 @@ public:
 	*/
 	void Render();
 
-	/*
-	* IMPORTS: none
-	* EXPORTS: litehtml 3ds container
-	* PURPOSE: get internal litehtml 3ds container
-	*/
-	container_3ds& getC3DS() const;
-
-	/*
-	* IMPORTS: none
-	* EXPORTS: litehtml context
-	* PURPOSE: get internal litehtml context
-	*/
-	litehtml::context& getContext() const;	
-
-private:
+// normally these are private and we use getters but im getting some wierd errors when passing to litehtml through functions
+// so for now they are public
+// doesnt really matter for the purposes of the application, but still bad coding nonetheless.
+public:
 	container_3ds m_c3ds;
 	litehtml::context m_htmlContext;
 };

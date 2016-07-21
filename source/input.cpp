@@ -17,8 +17,8 @@ void Input::HandleEvents()
 	touchPosition touch;
 	hidTouchRead(&touch);
 
-	m_PosX = touch.px;
-	m_PosY = touch.py;
+	m_posX = touch.px;
+	m_posY = touch.py;
 }
 
 void Input::SetRunning(bool isRunning)
@@ -31,12 +31,12 @@ bool Input::IsRunning() const
 	return m_running;
 }
 
-void Input::SetCurMode(AppState& as)
+void Input::SetCurMode(AppState as)
 {
 	m_as = as;
 }
 
-AppState& Input::CurMode() const
+AppState Input::CurMode() const
 {
 	return m_as;
 }
