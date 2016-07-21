@@ -89,8 +89,13 @@ void Book::ParseOPF(Renderer& ren)
 void Book::ParsePage(unsigned int pagenum, Renderer& ren)
 {
     std::string page(m_zipfile->ExtractToString(m_manifest[m_spine[pagenum]]));
-    m_content = litehtml::document::createFromUTF8(page.c_str(), &ren.m_c3ds, &ren.m_htmlContext);
-    m_content->render(400);
+    m_content = litehtml::document::createFromString(page.c_str(), &ren.m_c3ds, &ren.m_htmlContext);
+    
+    int best_width = m_content->render(400);
+	if(best_width < 400)
+	{
+	    m_content->render(best_width);
+	}
 }
 
 unsigned int Book::GetPageCount() const

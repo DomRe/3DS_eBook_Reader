@@ -1,7 +1,8 @@
+/*100% for width, height*/
 html {
     display: block;
-    height:100%;
-    width:100%;
+    height:auto;
+    width:auto;
 	position: relative;
 }
 
@@ -29,11 +30,12 @@ script {
     display: none
 }
 
+/*100% for width, height*/
 body {
 	display:block; 
 	margin:8px; 
-    height:100%;
-    width:100%;
+    height:auto;
+    width:auto;
 }
 
 p {
