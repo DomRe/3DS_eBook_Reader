@@ -94,10 +94,10 @@ litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName,
         FTC_Manager_LookupSize(m_Font.font->ftcmanager, &scaler, &font_size);
         FT_Load_Glyph(face, FT_Get_Char_Index(face, 'x'), FT_LOAD_NO_BITMAP);
  
-        fm->ascent = face->ascender;
-        fm->descent = face->descender;
-        fm->height = face->ascender - face->descender + 1;
-        fm->x_height = face->glyph->metrics.height;
+        fm->ascent = face->size->metrics.ascender >> 6;
+		fm->descent = face->size->metrics.descender >> 6;
+		fm->height = fm->ascent - fm->descent + 1;
+		fm->x_height = face->glyph->metrics.height >> 6;
  
         m_Font.strikeout = false;
         m_Font.underline = false;
