@@ -37,7 +37,7 @@ void Book::LoadBook(const std::string& epub, Renderer& ren)
 
     // basically screen width
 	m_bookpos.x = 0;
-	m_bookpos.y = 0;
+	m_bookpos.y = 10;
 	m_bookpos.width = 400;
 	m_bookpos.height = 240;
 

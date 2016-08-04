@@ -222,7 +222,7 @@ void container_3ds::del_clip()
 void container_3ds::get_client_rect(litehtml::position& client) const
 {
 	client.x = 0;
-	client.y = 0;
+	client.y = 10;
 	client.width = 400;
 	client.height = 240;
 }
