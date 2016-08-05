@@ -12,6 +12,8 @@
 
 using namespace tinyxml2;
 
+#include "tidy/tidyplatform.h"
+
 #include "tidy/tidy.h"
 #include "tidy/tidybuffio.h"
 #include "tidy/tidyenum.h"
