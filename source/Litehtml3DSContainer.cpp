@@ -243,3 +243,9 @@ void container_3ds::get_language(litehtml::tstring& language, litehtml::tstring 
 	language = _t("en");
 	culture = _t("");
 }
+
+litehtml::tstring container_3ds::resolve_color(const litehtml::tstring& color) const
+{
+	// ???
+	return "";
+}

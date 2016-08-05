@@ -696,7 +696,6 @@ typedef enum
   TidyAttr_CONTENTEDITABLE,
   TidyAttr_CONTEXTMENU,
   TidyAttr_CONTROLS,
-  TidyAttr_CROSSORIGIN,       /**< CROSSORIGIN= */
   TidyAttr_DEFAULT,
   TidyAttr_DIRNAME,
   TidyAttr_DRAGGABLE,
@@ -845,8 +844,6 @@ typedef enum
   TidyAttr_RESOURCE,          /**< RESOURCE= */
   TidyAttr_TYPEOF,            /**< TYPEOF= */
   TidyAttr_VOCAB,             /**< VOCAB= */
-
-  TidyAttr_INTEGRITY,         /**< INTEGRITY= */
 
   N_TIDY_ATTRIBS              /**< Must be last */
 } TidyAttrId;

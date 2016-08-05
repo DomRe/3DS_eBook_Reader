@@ -780,12 +780,6 @@ void TY_(AdjustTags)( TidyDocImpl *doc )
     }
 }
 
-Bool TY_(IsHTML5Mode)( TidyDocImpl *doc )
-{
-    return doc->HTML5Mode;
-}
-
-
 /*\
  * Issue #285
  * Reset the table to default HTML5 mode.
@@ -815,7 +809,6 @@ void TY_(ResetTags)( TidyDocImpl *doc )
 #if ELEMENT_HASH_LOOKUP
     tagsEmptyHash( doc, tags ); /* not sure this is really required, but to be sure */
 #endif
-    doc->HTML5Mode = yes;   /* set HTML5 mode */
 }
 
 void TY_(FreeTags)( TidyDocImpl* doc )
@@ -830,8 +823,6 @@ void TY_(FreeTags)( TidyDocImpl* doc )
 
     /* get rid of dangling tag references */
     TidyClearMemory( tags, sizeof(TidyTagImpl) );
-
-    doc->HTML5Mode = no;    /* reset html5 mode == legacy html4 mode */
 }
 
 

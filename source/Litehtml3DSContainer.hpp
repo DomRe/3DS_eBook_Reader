@@ -53,6 +53,7 @@ public:
 	std::shared_ptr<litehtml::element>	create_element(const litehtml::tchar_t *tag_name, const litehtml::string_map &attributes, const std::shared_ptr<litehtml::document> &doc) override;
 	void				get_media_features(litehtml::media_features& media) const override;
 	void				get_language(litehtml::tstring& language, litehtml::tstring & culture) const override;
+	litehtml::tstring resolve_color(const litehtml::tstring& color) const override;
 
 	void Close();
 	void SetCSS(const std::string& cssText);
