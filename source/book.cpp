@@ -14,8 +14,9 @@ using namespace tinyxml2;
 
 /*
 #include "tidy/tidy.h"
-#include "tidy/tidybuffio.h"
 #include "tidy/tidyenum.h"
+#include "tidy/tidybuffio.h"
+#include "tidy/tidyplatform.h"
 
 std::string CleanHTML(const std::string &html)
 {
