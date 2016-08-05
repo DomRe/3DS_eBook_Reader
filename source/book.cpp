@@ -12,8 +12,7 @@
 
 using namespace tinyxml2;
 
-#include "tidy/tidyplatform.h"
-
+/*
 #include "tidy/tidy.h"
 #include "tidy/tidybuffio.h"
 #include "tidy/tidyenum.h"
@@ -94,7 +93,7 @@ std::string CleanHTML(const std::string &html)
 
     return result;
 }
-
+*/
 Book::~Book()
 {
 	m_manifest.clear();
