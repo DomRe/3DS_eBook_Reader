@@ -1,8 +1,7 @@
-/*100% for width, height*/
 html {
     display: block;
-    height:auto;
-    width:auto;
+    height:100%;
+    width:100%;
 	position: relative;
 }
 
@@ -30,12 +29,11 @@ script {
     display: none
 }
 
-/*100% for width, height*/
 body {
 	display:block; 
 	margin:8px; 
-    height:auto;
-    width:auto;
+    height:100%;
+    width:100%;
 }
 
 p {
@@ -111,7 +109,7 @@ h6 {
 	margin-bottom:2.33em;
 	font-size:.67em;
 } 
-/*
+
 br {
 	display:inline-block;
 }
@@ -130,7 +128,7 @@ br[clear="right"]
 {
 	clear:right;
 }
-*/
+
 span {
 	display:inline
 }
