@@ -246,6 +246,5 @@ void container_3ds::get_language(litehtml::tstring& language, litehtml::tstring 
 
 litehtml::tstring container_3ds::resolve_color(const litehtml::tstring& color) const
 {
-	// ???
-	return "";
+	return litehtml::tstring();
 }
