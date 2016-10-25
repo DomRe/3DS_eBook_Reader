@@ -17,17 +17,15 @@ struct sftd_font_extended
     , strikeout(false)
     {}
 
-	sftd_font* font;
-	int size;
-	bool underline;
-	bool strikeout;
+	sftd_font* font = nullptr;
+	int size = 16;
+	bool underline = false;
+	bool strikeout = false;
 };
 
 class container_3ds : public litehtml::document_container
 {
 public:
-	virtual ~container_3ds();
-
 	litehtml::uint_ptr	create_font(const litehtml::tchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration, litehtml::font_metrics* fm) override;
 	void				delete_font(litehtml::uint_ptr hFont) override;
 	int					text_width(const litehtml::tchar_t* text, litehtml::uint_ptr hFont) override;

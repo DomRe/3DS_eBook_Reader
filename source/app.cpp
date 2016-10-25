@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <streambuf>
 
 #include <sf2d.h>
 #include <sftd.h>
@@ -37,9 +38,15 @@ void App::Init()
 	m_input.SetCurMode(AppState::Menu);
 
 	std::ifstream in("romfs:/master.css");
-	std::string master_css(static_cast<std::stringstream const&>(std::stringstream() << in.rdbuf()).str());
+	
+	in.seekg(0, std::ios::end);   
+	m_masterCSS.reserve(in.tellg());
+	in.seekg(0, std::ios::beg);
 
-	m_ren.m_htmlContext.load_master_stylesheet(master_css.c_str());
+	m_masterCSS.assign((std::istreambuf_iterator<char>(in)),
+            std::istreambuf_iterator<char>());
+
+	m_ren.m_htmlContext.load_master_stylesheet(m_masterCSS.c_str());
 }
 
 void App::Event()
@@ -76,7 +83,7 @@ void App::Render()
 
 				m_gui.DrawTopBackground();
 				m_gui.DrawStatusScreen();
-				
+
 			m_ren.StopDrawing();
 			m_ren.StartDrawingBottom();
 

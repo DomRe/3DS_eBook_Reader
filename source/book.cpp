@@ -12,89 +12,6 @@
 
 using namespace tinyxml2;
 
-/*
-#include "tidy/tidy.h"
-#include "tidy/tidyenum.h"
-#include "tidy/tidybuffio.h"
-#include "tidy/tidyplatform.h"
-
-std::string CleanHTML(const std::string &html)
-{
-    // Init tidy document.
-    TidyDoc tdoc = tidyCreate();
-    TidyBuffer output = {0};
-    TidyBuffer err = {0};
-
-    bool ok;
-    int rc = -1;
-
-    // Configure tidy.
-    ok = ( tidyOptSetBool(tdoc, TidyHtmlOut, yes)
-      && tidyOptSetBool(tdoc, TidyQuiet, yes)
-      && tidyOptSetBool(tdoc, TidyNumEntities, yes)
-      && tidyOptSetBool(tdoc, TidyShowWarnings, no)
-      && tidyOptSetBool(tdoc, TidyStrictTagsAttr, yes)
-      && tidyOptSetBool(tdoc, TidyWrapLen, yes)
-      && tidyOptSetBool(tdoc, TidyCoerceEndTags, yes)
-      && tidyOptSetBool(tdoc, TidyQuoteMarks, yes)
-      && tidyOptSetBool(tdoc, TidyWrapAttVals, yes)
-      && tidyOptSetBool(tdoc, TidyFixBackslash, yes)
-      && tidyOptSetBool(tdoc, TidyIndentAttributes, yes));
-
-    // Parse input.
-    if (ok)
-    {
-        tidySetErrorBuffer(tdoc, &err);
-    }
-
-    if(rc >= 0)
-    {
-        rc = tidyParseString(tdoc, html.c_str());
-    }
-
-    // Clean & Repair.
-    if (rc >= 0)
-    {
-        rc = tidyCleanAndRepair(tdoc);
-    }
-    
-    if (rc >= 0)
-    {
-        // Check for errors.
-        rc = tidyRunDiagnostics(tdoc);
-    }
-    
-    if (rc > 1)
-    {
-        rc = (tidyOptSetBool(tdoc, TidyForceOutput, yes) ? rc : -1);
-    }
-
-    if (rc >= 0)
-    {
-        rc = tidySaveBuffer(tdoc, &output);
-    }
-
-    std::string result = "";
-
-    if (rc >= 0)
-    {
-        if (rc > 0)
-        {
-            result = (char*)output.bp;
-        }
-    }
-    else
-    {
-        result = "error";
-    }
-    
-    tidyBufFree(&output);
-    tidyBufFree(&err);
-    tidyRelease(tdoc);
-
-    return result;
-}
-*/
 Book::~Book()
 {
     m_manifest.clear();
@@ -199,5 +116,5 @@ void Book::Reader(Gui& gui, Renderer& ren)
         ParsePage(m_curpage, ren);
     }
 
-    m_content->draw(0, 0, -gui.getBookPageY(), &m_bookpos);
+    m_content->draw(nullptr, 0, -gui.getBookPageY(), &m_bookpos);
 } 

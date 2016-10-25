@@ -41,11 +41,6 @@ struct sftd_font {
    texture_atlas *tex_atlas;
 };
 
-container_3ds::~container_3ds()
-{
-
-}
-
 void container_3ds::Close()
 {
 	if(m_Font.font)
@@ -61,21 +56,10 @@ void container_3ds::SetCSS(const std::string& cssText)
 
 litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName, int size, int weight, litehtml::font_style italic, unsigned int decoration, litehtml::font_metrics* fm)
 {
-	if(!m_Font.font)
+	if(m_Font.font == nullptr)
 	{
         // very simple support for fonts in early stage, so we dont give a damn about the type of font it is...
-		FILE* fp = fopen("/books/myfont.ttf", "r");
-
-		if (fp)
-		{
-			m_Font.font = sftd_load_font_file("/books/myfont.ttf");
-		}
-		else
-		{
-			m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
-		}
-
-		fclose(fp);
+		m_Font.font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
  
         FTC_FaceID face_id = (FTC_FaceID)m_Font.font;
         FT_Face face;
@@ -118,7 +102,8 @@ int container_3ds::text_width(const litehtml::tchar_t* text, litehtml::uint_ptr 
 
 void container_3ds::draw_text(litehtml::uint_ptr hdc, const litehtml::tchar_t* text, litehtml::uint_ptr hFont, litehtml::web_color color, const litehtml::position& pos)
 {
-	sftd_draw_text(m_Font.font, pos.x, pos.y, RGBA8(color.red, color.blue, color.green, color.alpha), m_Font.size, text);
+	std::string texts(text);
+	sftd_draw_text(m_Font.font, pos.x, pos.y, RGBA8(color.red, color.blue, color.green, color.alpha), m_Font.size, texts.c_str());
 }
 
 int container_3ds::pt_to_px(int pt)
@@ -134,7 +119,7 @@ int container_3ds::get_default_font_size() const
 const litehtml::tchar_t* container_3ds::get_default_font_name() const
 {
 	// We say this is the default font, but its irrelevant.
-	return "Sans-serif";
+	return "LiberationSans-Regular";
 }
 
 void container_3ds::draw_list_marker(litehtml::uint_ptr hdc, const litehtml::list_marker& marker)
