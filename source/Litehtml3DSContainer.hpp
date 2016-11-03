@@ -12,15 +12,15 @@ struct sftd_font_extended
 {
 	sftd_font_extended()
     : font(nullptr)
-    , size(0)
+    , size(12)
     , underline(false)
     , strikeout(false)
     {}
 
-	sftd_font* font = nullptr;
-	int size = 16;
-	bool underline = false;
-	bool strikeout = false;
+	sftd_font* font;
+	int size;
+	bool underline;
+	bool strikeout;
 };
 
 class container_3ds : public litehtml::document_container

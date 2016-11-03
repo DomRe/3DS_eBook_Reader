@@ -37,7 +37,7 @@ void Book::LoadBook(const std::string& epub, Renderer& ren)
 
     // basically screen width
     m_bookpos.x = 0;
-    m_bookpos.y = 10;
+    m_bookpos.y = 0;
     m_bookpos.width = 400;
     m_bookpos.height = 240;
 
@@ -90,7 +90,7 @@ void Book::ParsePage(unsigned int pagenum, Renderer& ren)
 {
     std::string page(m_zipfile->ExtractToString(m_manifest[m_spine[pagenum]]));
     m_content = litehtml::document::createFromString(page.c_str(), &ren.m_c3ds, &ren.m_htmlContext);
-    
+
     int best_width = m_content->render(400);
     if(best_width < 400)
     {
@@ -116,5 +116,5 @@ void Book::Reader(Gui& gui, Renderer& ren)
         ParsePage(m_curpage, ren);
     }
 
-    m_content->draw(nullptr, 0, -gui.getBookPageY(), &m_bookpos);
+    m_content->draw(nullptr, 0, -gui.getBookPageY(), nullptr);
 } 

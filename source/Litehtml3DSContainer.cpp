@@ -15,7 +15,7 @@
 
 #include "Litehtml3DSContainer.hpp"
 
-#define PPI_3DS 132.1
+#define PPI_3DS 95.5
 
 #define FT_CEIL(X)  (((X + 63) & -64) / 64)
 
@@ -82,7 +82,7 @@ litehtml::uint_ptr container_3ds::create_font(const litehtml::tchar_t* faceName,
 		fm->descent = face->size->metrics.descender >> 6;
 		fm->height = fm->ascent - fm->descent + 1;
 		fm->x_height = face->glyph->metrics.height >> 6;
- 
+
         m_Font.strikeout = false;
         m_Font.underline = false;
     }
@@ -97,18 +97,18 @@ void container_3ds::delete_font(litehtml::uint_ptr hFont)
 
 int container_3ds::text_width(const litehtml::tchar_t* text, litehtml::uint_ptr hFont)
 {
-	return sftd_get_text_width(m_Font.font, m_Font.size, text);
+	return sftd_get_text_width(m_Font.font, m_Font.size, (const char*)text);
 }
 
 void container_3ds::draw_text(litehtml::uint_ptr hdc, const litehtml::tchar_t* text, litehtml::uint_ptr hFont, litehtml::web_color color, const litehtml::position& pos)
 {
-	std::string texts(text);
-	sftd_draw_text(m_Font.font, pos.x, pos.y, RGBA8(color.red, color.blue, color.green, color.alpha), m_Font.size, texts.c_str());
+	std::string texts((const char*)text);
+	sftd_draw_text(m_Font.font, pos.x, pos.y, RGBA8(0, 0, 0, 255), m_Font.size, texts.c_str());
 }
 
 int container_3ds::pt_to_px(int pt)
 {
-	return pt / 72 * PPI_3DS;
+	return (int)((double)pt * PPI_3DS / 72.0);
 }
 
 int container_3ds::get_default_font_size() const
@@ -207,7 +207,7 @@ void container_3ds::del_clip()
 void container_3ds::get_client_rect(litehtml::position& client) const
 {
 	client.x = 0;
-	client.y = 10;
+	client.y = 0;
 	client.width = 400;
 	client.height = 240;
 }
