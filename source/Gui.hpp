@@ -12,6 +12,7 @@
 #include "Book.hpp"
 
 class Input;
+class Renderer;
 
 class Gui
 {
@@ -91,7 +92,7 @@ public:
 	* EXPORTS: none
 	* PURPOSE: Draw the actual book to the screen.
 	*/
-	void DrawBook(Gui& gui, Renderer& ren);
+	void DrawBook(Gui& gui);
 
 	/*
 	* IMPORTS: none
@@ -109,17 +110,17 @@ public:
 
 	/*
 	* IMPORTS: none
-	* EXPORTS: none
-	* PURPOSE: Y position of book page.
+	* EXPORTS: sftd_font
+	* PURPOSE: get the text font
 	*/
-	int getBookPageY();
+	sftd_font* getTextFont();
 
 	/*
 	* IMPORTS: none
-	* EXPORTS: none
-	* PURPOSE: vector position
+	* EXPORTS: book page
+	* PURPOSE: get book page
 	*/
-	int getBookVectorPos();
+	int getBookPage();
 
 private:
 	Book m_book;
@@ -128,8 +129,7 @@ private:
 	int m_curPage = 0;
 	int m_indexBookmark = 0;
 	int m_curPageBookmark = 0;
-	int m_bookPageY = 10;
-	int m_bookVectorPos = 0;
+	int m_bookPage = 0;
 	unsigned int m_begin = 0;
 	unsigned int m_end = 7;
 	unsigned int m_beginBookmark = 0;
@@ -153,6 +153,7 @@ private:
 	std::vector<sf2d_texture*> m_batteryLevels;
 
 	sftd_font* m_font;
+	sftd_font* m_textFont;
 
 	std::vector<std::string> m_files;
 	std::vector<int> m_bookmarkedPages;
@@ -197,7 +198,7 @@ private:
 	* EXPORTS: none
 	* PURPOSE: Open a book to read. Used internally.
 	*/
-	void OpenBook(const std::string& bookName, Renderer& ren);
+	void OpenBook(const std::string& bookName);
 
 	/*
 	* IMPORTS: file - std::string containing the path of the book

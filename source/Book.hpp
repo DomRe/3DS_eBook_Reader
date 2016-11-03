@@ -8,7 +8,6 @@
 #include <string>
 #include <unordered_map>
 
-#include "Renderer.hpp"
 #include "zip/BLUnZip.h"
 
 class Gui;
@@ -28,35 +27,35 @@ public:
 	* EXPORTS: none
 	* PURPOSE: Load and parse the book.
 	*/
-	void LoadBook(const std::string& epub, Renderer& ren);
+	void LoadBook(const std::string& epub);
 
 	/*
-	* IMPORTS: none
+	* IMPORTS: zipfile
 	* EXPORTS: none
 	* PURPOSE: Extract the book and parse the meta xml.
 	*/
-	void ParseContainer();
+	void ParseContainer(BLUnZip& zipfile);
 
 	/*
-	* IMPORTS: none
+	* IMPORTS: zipfile, renderer
 	* EXPORTS: none
 	* PURPOSE: Parse the OPF containing all the information about the book.
 	*/
-	void ParseOPF(Renderer& ren);
+	void ParseOPF(BLUnZip& zipfile);
 
 	/*
-	* IMPORTS: none
+	* IMPORTS: zipfile, renderer
 	* EXPORTS: none
 	* PURPOSE: Parse the pages of the book.
 	*/
-	void ParsePage(unsigned int pagenum, Renderer& ren);
+	void ParsePages(BLUnZip& zipfile);
 
 	/*
 	* IMPORTS: gui - the GUI object. Ren - the renderer object.
 	* EXPORTS: none
 	* PURPOSE: Read the book.
 	*/
-	void Reader(Gui& gui, Renderer& ren);
+	void Reader(Gui& gui);
 
 	/*
 	* IMPORTS: none
@@ -67,23 +66,16 @@ public:
 
 	/*
 	* IMPORTS: none
-	* EXPORTS: int - page number.
-	* PURPOSE: Get the current page of the book.
-	*/
-	unsigned int GetPageCount() const;
-
-	/*
-	* IMPORTS: none
 	* EXPORTS: std::string of book
 	* PURPOSE: To get the std::string of the path of the book.
 	*/
 	std::string GetBook();
+	
 private:
 	std::string m_book = "";
 	std::string m_opf = "";
 
-	// ebook unzipped to memory
-	std::shared_ptr<BLUnZip> m_zipfile;
+	std::string m_valid = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$^&*()\"_\\+[];,./{}|:<>'?%";
 
 	// id, href
 	std::unordered_map<std::string, std::string> m_manifest;
@@ -91,12 +83,8 @@ private:
 	// order of book, THIS IS ORDERED DONT MESS WITH ORDER
 	std::vector<std::string> m_spine;
 
-	// The html pages in the book
-	litehtml::document::ptr m_content;
-	litehtml::position m_bookpos;
-
-	// curpage
-	int m_curpage;
+	// All the text in the book.
+	std::vector<std::string> m_alltext;
 };
 
 #endif

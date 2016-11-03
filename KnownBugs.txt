@@ -1,0 +1,1 @@
+- Selecting an empty slot on the load file screen will cause a crash.

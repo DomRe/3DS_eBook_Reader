@@ -3,11 +3,6 @@
 
 #include <unistd.h>
 
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <streambuf>
-
 #include <sf2d.h>
 #include <sftd.h>
 
@@ -36,17 +31,6 @@ void App::Init()
 	m_gui.Load();
 
 	m_input.SetCurMode(AppState::Menu);
-
-	std::ifstream in("romfs:/master.css");
-	
-	in.seekg(0, std::ios::end);   
-	m_masterCSS.reserve(in.tellg());
-	in.seekg(0, std::ios::beg);
-
-	m_masterCSS.assign((std::istreambuf_iterator<char>(in)),
-            std::istreambuf_iterator<char>());
-
-	m_ren.m_htmlContext.load_master_stylesheet(m_masterCSS.c_str());
 }
 
 void App::Event()
@@ -97,7 +81,7 @@ void App::Render()
 			m_ren.StartDrawingTop();
 			
 				m_gui.DrawTextBG();
-				m_gui.DrawBook(m_gui, m_ren);
+				m_gui.DrawBook(m_gui);
 				m_gui.DrawStatusScreen();
 			
 			m_ren.StopDrawing();
@@ -114,7 +98,6 @@ void App::Render()
 
 void App::End()
 {
-	m_ren.m_c3ds.Close();
 	m_gui.Close();
 
 	sftd_fini();

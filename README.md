@@ -23,10 +23,7 @@ Then run "build-cia.bat" or "build-cia.sh" depending on your platform.
 - tinyxml2 for xml parsing
 - BLUnzip for simplified C++ minizip
 - zlib for zip functions
-- freetype2 for font manipulation
-- litehtml for html parsing and rendering.
 - The people at #cakey
-- some random guy on the internet: helping me get litehtml working properly.
 - Source Code Pro font: https://github.com/adobe-fonts/source-code-pro
 
 ## License:

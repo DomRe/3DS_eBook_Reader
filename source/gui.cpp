@@ -15,26 +15,15 @@
 
 #include "Gui.hpp"
 #include "Input.hpp"
+#include "Renderer.hpp"
 #include "tinyxml2/tinyxml2.h"
 
 using namespace tinyxml2;
 
 void Gui::Load()
 {
-	// Choose which font to open.
-	FILE* fp = fopen("/books/myfont.ttf", "r");
-
-	if (fp)
-	{
-		m_font = sftd_load_font_file("/books/myfont.ttf");
-	}
-	else
-	{
-		m_font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
-	}
-
-	fclose(fp);
-
+	m_textFont = sftd_load_font_file("romfs:/font/SourceCodePro-Regular.ttf");
+	m_font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
 	m_next = sfil_load_PNG_file("romfs:/NextFM.png", SF2D_PLACE_RAM);
 	m_prev = sfil_load_PNG_file("romfs:/PrevFM.png", SF2D_PLACE_RAM);
 	m_top = sfil_load_PNG_file("romfs:/top.png", SF2D_PLACE_RAM);
@@ -73,6 +62,7 @@ void Gui::Load()
 void Gui::Close()
 {
 	sftd_free_font(m_font);
+	sftd_free_font(m_textFont);
 	sf2d_free_texture(m_next);
 	sf2d_free_texture(m_prev);
 	sf2d_free_texture(m_controls);
@@ -96,7 +86,7 @@ void Gui::HandleEventsMenu(Input& input, Renderer& ren)
 	{
 		if (m_selected != "")
 		{
-			OpenBook(m_selected, ren);
+			OpenBook(m_selected);
 			m_loading = false;
 			input.SetCurMode(AppState::Text);
 			m_drawAbout = false;
@@ -157,22 +147,18 @@ void Gui::HandleEventsBook(Input& input)
 		}
 		else
 		{
-			if (input.getKeyDown() & KEY_UP) { m_bookPageY -= 10; }
-			if (input.getKeyDown() & KEY_DOWN) { m_bookPageY += 10; }
-			if (input.getKeyDown() & KEY_L) { m_bookPageY -= 10; }
-			if (input.getKeyDown() & KEY_R) { m_bookPageY += 10; }
-            if (input.getKeyDown() & KEY_LEFT) { m_bookVectorPos--; m_bookPageY = 0;}
-            if (input.getKeyDown() & KEY_RIGHT) { m_bookVectorPos++; m_bookPageY = 0;}
+			if (input.getKeyDown() & KEY_L) { m_bookPage--; }
+			if (input.getKeyDown() & KEY_R) { m_bookPage++; }
+            if (input.getKeyDown() & KEY_LEFT) { m_bookPage--; }
+            if (input.getKeyDown() & KEY_RIGHT) { m_bookPage++; }
 
-			if (m_bookVectorPos < 0) { m_bookVectorPos = 0; }
-			if (m_bookVectorPos >= (int)m_book.GetPageCount()) { m_bookVectorPos = m_book.GetPageCount() - 1; }
-			if (m_bookPageY < 10) { m_bookPageY = 10; }
+			if (m_bookPage < 0) { m_bookPage = 0; }
 
 			if (input.getPosX() >= 20 && input.getPosX() <= 103 && input.getPosY() >= 18 && input.getPosY() <= 185) {
 				input.SetCurMode(AppState::Menu);
 				CloseBook();
 				m_selected = "";
-				m_bookPageY = 0;
+				m_bookPage = 0;
 			}
 
 			if (input.getPosX() >= 120 && input.getPosX() <= 203 && input.getPosY() >= 18 && input.getPosY() <= 185) {
@@ -200,7 +186,7 @@ void Gui::HandleEventsBook(Input& input)
 		if (input.getKeyDown() & KEY_X) { RemoveBookmark(m_indexBookmark+(7*m_curPageBookmark)); }
 
 		if (input.getKeyDown() & KEY_A) { 
-			m_bookPageY = m_bookmarkedPages[m_indexBookmark+(7*m_curPageBookmark)]; 
+			m_bookPage = m_bookmarkedPages[m_indexBookmark+(7*m_curPageBookmark)]; 
 		}
 
 		if (input.getPosX() >= 159 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241) {
@@ -247,7 +233,7 @@ void Gui::DrawFileSelect(Renderer& ren)
 			m_end = 7; 
 		} else {
 			m_begin = (7*m_curPage);
-			m_end = (7*m_curPage) + 6;
+			m_end = (7*m_curPage) + 7;
 		}
 
 		if (m_end > m_files.size()) {
@@ -303,12 +289,11 @@ void Gui::DrawStatusScreen()
     }
 }
 
-void Gui::OpenBook(const std::string& bookName, Renderer& ren)
+void Gui::OpenBook(const std::string& bookName)
 {
 	std::string fullBook = "/books/"+bookName;
-	m_bookVectorPos = 0;
 	
-	m_book.LoadBook(fullBook.c_str(), ren);
+	m_book.LoadBook(fullBook.c_str());
 }
 
 void Gui::CloseBook()
@@ -321,11 +306,11 @@ void Gui::DrawTextBG()
 	sf2d_draw_texture(m_textBG, 0, 0);
 }
 
-void Gui::DrawBook(Gui& gui, Renderer& ren)
+void Gui::DrawBook(Gui& gui)
 {
 	if (!m_drawAbout)
 	{
-		m_book.Reader(gui, ren);
+		m_book.Reader(gui);
 	}
 	else
 	{
@@ -351,7 +336,7 @@ void Gui::DrawControls()
 			m_endBookmark = 7; 
 		} else {
 			m_beginBookmark = (7*m_curPageBookmark);
-			m_endBookmark = (7*m_curPageBookmark) + 6;
+			m_endBookmark = (7*m_curPageBookmark) + 7;
 		}
 
 		if (m_endBookmark > m_bookmarkedPages.size()) {
@@ -440,7 +425,7 @@ void Gui::SaveBookmark()
 		bookmarkElement->SetAttribute("book", m_selected.c_str());
 
 		// insert bookmark
-		bookmarkElement->SetAttribute("page", m_bookPageY);
+		bookmarkElement->SetAttribute("page", m_bookPage);
 		root->InsertEndChild(bookmarkElement);
 
 		doc.SaveFile("/books/bookmarks.xml");
@@ -463,11 +448,21 @@ void Gui::SaveBookmark()
 		bookmarkElement->SetAttribute("book", m_selected.c_str());
 
 		// insert bookmark
-		bookmarkElement->SetAttribute("page", m_bookPageY);
+		bookmarkElement->SetAttribute("page", m_bookPage);
 		root->InsertEndChild(bookmarkElement);
 
 		doc.SaveFile("/books/bookmarks.xml");
 	}
+}
+
+sftd_font* Gui::getTextFont()
+{
+	return m_textFont;
+}
+
+int Gui::getBookPage()
+{
+	return m_bookPage;
 }
 
 void Gui::RemoveBook(const std::string& file)
@@ -521,17 +516,6 @@ void Gui::RemoveBookmark(int element)
 	{
 		in.close();
 	}
-
-}
-
-int Gui::getBookPageY()
-{
-	return m_bookPageY;
-}
-
-int Gui::getBookVectorPos()
-{
-	return m_bookVectorPos;
 }
 
 std::string Gui::clock()

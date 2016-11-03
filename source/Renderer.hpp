@@ -4,8 +4,6 @@
 #ifndef EBOOK_RENDERER_HPP_
 #define EBOOK_RENDERER_HPP_
 
-#include "Litehtml3DSContainer.hpp"
-
 class Renderer
 {
 public:
@@ -36,13 +34,6 @@ public:
 	* PURPOSE: Render everything to the screen.
 	*/
 	void Render();
-
-// normally these are private and we use getters but im getting some wierd errors when passing to litehtml through functions
-// so for now they are public
-// doesnt really matter for the purposes of the application, but still bad coding nonetheless.
-public:
-	container_3ds m_c3ds;
-	litehtml::context m_htmlContext;
 };
 
 #endif

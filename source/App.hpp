@@ -78,9 +78,6 @@ private:
 	Input m_input;
 	Renderer m_ren;
 	Gui m_gui;
-
-public:
-	std::string m_masterCSS = "";
 };
 
 #endif
