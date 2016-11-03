@@ -31,9 +31,9 @@ bool TextVisitor::Visit(const XMLText& text)
 	t = text.Value();	
 
 	// break text strings into 57 character lengths to fit on the screen.
-	for (unsigned int i = 0; i < t.length(); i += 57)
+	for (unsigned int i = 0; i < t.length(); i += 50)
 	{
-		m_bookText.push_back(t.substr(i, 57));
+		m_bookText.push_back(t.substr(i, 50));
 	}
 	
 	return true;

@@ -86,7 +86,7 @@ void Book::ParsePages(BLUnZip& zipfile)
     }
 
     // m_spine.size(); or 7 for debug
-    for (unsigned int i = 0; i != 7; i++)
+    for (unsigned int i = 0; i != m_spine.size(); i++)
     {
         TextVisitor tv;
 
@@ -112,14 +112,22 @@ void Book::ParsePages(BLUnZip& zipfile)
         // now we have scrubbed the text, we need to remove weird comma thingys.
         for (auto& text : m_alltext)
         {
-            std::string bad = "'''";
+            std::string badA = "'''";
+            std::string badB = " ''";
             std::string good = "'";
 
             std::string::size_type n = 0;
-            while ( ( n = text.find( bad, n ) ) != std::string::npos )
+            while ( ( n = text.find( badA, n ) ) != std::string::npos )
             {
-                text.replace( n, bad.size(), good );
+                text.replace( n, badA.size(), good );
                 n += good.size();
+            }
+
+            std::string::size_type o = 0;
+            while ( ( o = text.find( badB, o ) ) != std::string::npos )
+            {
+                text.replace( o, badB.size(), good );
+                o += good.size();
             }
         }
     }
@@ -132,13 +140,13 @@ std::string Book::GetBook()
 
 void Book::Reader(Gui& gui)
 {   
-    int ypos = 20;  
+    int ypos = 26;  
     
-    // 57 character limit using fixed width font, start at y = 20, 12 pixels spacing per line..., 18 lines per page top screen, max looping is 236
+    // 50 character limit using fixed width font, start at y = 26, 12 pixels spacing per line..., 17 lines per page top screen, max looping is 236
     // bottom screen is same, except only 46 characters per line.
-    for (int i = (gui.getBookPage() * 18); i < ((gui.getBookPage() * 18) + 18); i++)
+    for (int i = (gui.getBookPage() * 17); i < ((gui.getBookPage() * 17) + 17); i++)
     {
-        sftd_draw_text(gui.getTextFont(), 0, ypos, RGBA8(0, 0, 0, 255), 12, m_alltext[i].c_str());
+        sftd_draw_text(gui.getTextFont(), 24, ypos, RGBA8(0, 0, 0, 255), 12, m_alltext[i].c_str());
         ypos += 12;
     }
 } 

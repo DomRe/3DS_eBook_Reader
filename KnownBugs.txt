@@ -1,1 +1,2 @@
 - Selecting an empty slot on the load file screen will cause a crash.
+- Some books cause parser to freeze. must investigate.
