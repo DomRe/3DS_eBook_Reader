@@ -30,7 +30,7 @@ SOURCE_DIRS := source
 EXTRA_OUTPUT_FILES :=
 
 LIBRARY_DIRS := $(DEVKITPRO)/libctru $(PORTLIBS)
-LIBRARIES := sftd sfil freetype jpeg turbojpeg png png16 sf2d citro3d ctru m z
+LIBRARIES := sftd sfil freetype jpeg turbojpeg png png16 sf2d citro3d ctru bz2 m z
 BUILD_FLAGS :=
 RUN_FLAGS :=
 
