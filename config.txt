@@ -1,0 +1,8 @@
+language=english
+first_time=false
+savelog=true
+buffersize=512
+transfer_mode=new
+update=true,true,true,true
+lastdir=C:\Users\Dom\git\3DS_eBook_Reader
+ip=10.0.0.16
