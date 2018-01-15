@@ -10,15 +10,10 @@ MUST BE IN A VALID AND COMPLIANT .EPUB FORMAT. DRM-FREE EBOOK SHOPS ARE YOUR BES
 
 IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 
-## Building
-You must first install devkitPro, libctru, sf2d, sftd, sfil and the portlibs. To get the zip on windows you will also need gnu32 zip + unzip binaries.
-
-Then run "build-cia.bat" or "build-cia.sh" depending on your platform.
-
 ## Credits:
 - AlbertoSonic for initial codebase and graphics.
-- cots for the new fancy artwork.
-- xerpi for SF2D, SFIL & SFTD
+- cots on gbatemp for the new fancy artwork.
+- BernardoGiordano for pp2d
 - minizip for unzipping
 - tinyxml2 for xml parsing
 - BLUnzip for simplified C++ minizip

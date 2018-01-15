@@ -1,16 +1,9 @@
+# system stuff
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-.DS_Store
-._*
-.Spotlight-V100
-.Trashes
-books/
-build/
-unzippedepub/
-footage/
-output/
-meta/*.bin
-meta/*.smdh
-source/tidy.zip
+
+# folder stuff
+*.txt
+
+# project stuff
+citra/
+*.bat
