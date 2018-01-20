@@ -1,7 +1,7 @@
-// Gui.cpp
-// UI management class
-
-#include <sfil.h>
+///
+/// GUI.cpp
+/// UI management class
+///
 
 #include <cmath>
 #include <ctime>
@@ -13,35 +13,26 @@
 #include <dirent.h> 
 #include <algorithm>
 
-#include "Gui.hpp"
-#include "Input.hpp"
-#include "Renderer.hpp"
-#include "tinyxml2/tinyxml2.h"
-
-using namespace tinyxml2;
-
-void Gui::Load()
+void GUI::load()
 {
-	m_textFont = sftd_load_font_file("romfs:/font/SourceCodePro-Regular.ttf");
-	m_font = sftd_load_font_file("romfs:/font/LiberationSans-Regular.ttf");
-	m_next = sfil_load_PNG_file("romfs:/NextFM.png", SF2D_PLACE_RAM);
-	m_prev = sfil_load_PNG_file("romfs:/PrevFM.png", SF2D_PLACE_RAM);
-	m_top = sfil_load_PNG_file("romfs:/top.png", SF2D_PLACE_RAM);
-	m_bottom = sfil_load_PNG_file("romfs:/bottom.png", SF2D_PLACE_RAM);
-	m_controls = sfil_load_PNG_file("romfs:/controls.png", SF2D_PLACE_RAM);
-	m_exit = sfil_load_PNG_file("romfs:/exit.png", SF2D_PLACE_RAM);
-	m_charging = sfil_load_PNG_file("romfs:/BatteryCharge.png", SF2D_PLACE_RAM);
-	m_about = sfil_load_PNG_file("romfs:/about.png", SF2D_PLACE_RAM);
-	m_textBG = sfil_load_PNG_file("romfs:/text.png", SF2D_PLACE_RAM);
-	m_bookmarkedBG = sfil_load_PNG_file("romfs:/bookmarked.png", SF2D_PLACE_RAM);
-	m_back = sfil_load_PNG_file("romfs:/back.png", SF2D_PLACE_RAM);
+	m_next = new Texture(1, "romfs:/NextFM.png");
+	m_prev = new Texture(2, "romfs:/PrevFM.png");
+	m_top = new Texture(3, "romfs:/top.png");
+	m_bottom = new Texture(4, "romfs:/bottom.png");
+	m_controls = new Texture(5, "romfs:/controls.png");
+	m_exit = new Texture(6, "romfs:/exit.png");
+	m_charging = new Texture(7, "romfs:/BatteryCharge.png");
+	m_about = new Texture(8, "romfs:/about.png");
+	m_textBG = new Texture(9, "romfs:/text.png");
+	m_bookmarkedBG = new Texture(10, "romfs:/bookmarked.png");
+	m_back = new Texture(11, "romfs:/back.png");
 
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryEmpty.png", SF2D_PLACE_RAM));
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryLowest.png", SF2D_PLACE_RAM));
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryLow.png", SF2D_PLACE_RAM));
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryMid.png", SF2D_PLACE_RAM));
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryHigh.png", SF2D_PLACE_RAM));
-	m_batteryLevels.push_back(sfil_load_PNG_file("romfs:/BatteryFull.png", SF2D_PLACE_RAM));
+	m_batteryLevels.push_back(new Texture(12, "romfs:/BatteryEmpty.png"));
+	m_batteryLevels.push_back(new Texture(13, "romfs:/BatteryLowest.png"));
+	m_batteryLevels.push_back(new Texture(14, "romfs:/BatteryLow.png"));
+	m_batteryLevels.push_back(new Texture(15, "romfs:/BatteryMid.png"));
+	m_batteryLevels.push_back(new Texture(16, "romfs:/BatteryHigh.png"));
+	m_batteryLevels.push_back(new Texture(17, "romfs:/BatteryFull.png"));
 
 	DIR *dir;
 	struct dirent *ent;
@@ -59,24 +50,23 @@ void Gui::Load()
 	closedir (dir);
 }
 
-void Gui::Close()
+void GUI::close()
 {
-	sftd_free_font(m_font);
-	sftd_free_font(m_textFont);
-	sf2d_free_texture(m_next);
-	sf2d_free_texture(m_prev);
-	sf2d_free_texture(m_controls);
-	sf2d_free_texture(m_top);
-	sf2d_free_texture(m_bottom);
-	sf2d_free_texture(m_exit);
-	sf2d_free_texture(m_charging);
-	sf2d_free_texture(m_about);
-	sf2d_free_texture(m_textBG);
-	sf2d_free_texture(m_bookmarkedBG);
-	sf2d_free_texture(m_back);
+	delete m_next;
+	delete m_prev;
+	delete m_controls;
+	delete m_top;
+	delete m_bottom;
+	delete m_exit;
+	delete m_charging;
+	delete m_about;
+	delete m_textBG;
+	delete m_bookmarkedBG;
+	delete m_back;
 
-	for(auto& v : m_batteryLevels) {
-		sf2d_free_texture(v);
+	for(auto& tex : m_batteryLevels)
+	{
+		delete tex;
 	}
 }
 

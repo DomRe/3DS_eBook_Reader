@@ -1,5 +1,7 @@
-// Book.hpp
-// Manages the ebook.
+///
+/// Book.cpp
+/// Manages the eBook.
+///
 
 #include <cmath>
 #include <numeric>
@@ -7,146 +9,125 @@
 #include <iostream>
 #include <algorithm>
 
-#include "Gui.hpp" // includes book.h
-#include "TextVisitor.hpp"
+#include "tinyxml/tinyxml2.h"
 
+using namespace zipper;
 using namespace tinyxml2;
+
+Book::Book(const std::string& epub)
+:m_opf(""), m_book(""), m_title(""), m_author(""), m_container("")
+{
+    m_book = epub;
+    Unzipper zip(epub);
+
+    parseContainer(zip);
+    parseOPF(zip);
+    parsePages(zip);
+
+    zip.close();
+}
 
 Book::~Book()
 {
     m_manifest.clear();
     m_spine.clear();
-    m_alltext.clear();
-}
-
-void Book::CloseBook()
-{
-    m_manifest.clear();
-    m_spine.clear();
+    m_text.clear();
+    m_entries.clear();
 
     m_book = "";
     m_opf = ""; 
-}
+    m_title = "";
+    m_author = "";
+    m_container = "";
+}    
 
-void Book::LoadBook(const std::string& epub)
+void Book::parseContainer(Unzipper& zip)
 {
-    m_book = epub;
-    BLUnZip zp(m_book);
-
-    ParseContainer(zp);
-    ParseOPF(zp);
-    ParsePages(zp);
-}
-
-void Book::ParseContainer(BLUnZip& zipfile)
-{
-    std::string data( zipfile.ExtractToString("META-INF/container.xml") );
+    std::vector<unsigned char> buffer;
+    zip.extractEntryToMemory("META-INF/container.xml", buffer);
+    
+    // We do this extra step to ensure null termination and proper c string structure.
+    std::string data(buffer.begin(), buffer.end());
 
     XMLDocument doc;
-    doc.Parse( data.c_str() );
+    doc.Parse(data.c_str());
 
-    XMLElement* container = doc.FirstChildElement( "container" );
-    XMLElement* rootfiles = container->FirstChildElement( "rootfiles" );
-    XMLElement* rootfile = rootfiles->FirstChildElement( "rootfile" );
+    XMLElement* container = doc.FirstChildElement("container");
+    XMLElement* rootfiles = container->FirstChildElement("rootfiles");
+    XMLElement* rootfile = rootfiles->FirstChildElement("rootfile");
 
     m_opf = rootfile->Attribute("full-path");
+
+    auto pos = m_opf.find("content.opf");
+    if (pos = 0)
+    {
+        m_container = "";
+    }
+    else
+    {
+        m_container = m_opf.substr(0, pos);
+    }
 }
 
-void Book::ParseOPF(BLUnZip& zipfile)
+void Book::parseOPF(Unzipper& zip)
 {
-    std::string data( zipfile.ExtractToString( m_opf ) );
+    std::vector<unsigned char> buffer;
+    zip.extractEntryToMemory(m_opf, buffer);
+    
+    // We do this extra step to ensure null termination and proper c string structure.
+    std::string data(buffer.begin(), buffer.end());
     
     XMLDocument doc;
-    doc.Parse( data.c_str() );
+    doc.Parse(data.c_str());
 
     XMLElement* package = doc.FirstChildElement("package");
-    XMLElement* manifest_ = package->FirstChildElement("manifest");
-    XMLElement* item = manifest_->FirstChildElement("item");
+    XMLElement* metadata = package->FirstChildElement("metadata");
+    XMLElement* manifest = package->FirstChildElement("manifest");
+    XMLElement* item = manifest->FirstChildElement("item");
+
+    m_title = metadata->FirstChildElement("dc:title")->GetText();
+    m_author = metadata->FirstChildElement("dc:creator")->GetText();
 
     for(XMLElement* rfe = item; rfe != nullptr; rfe = rfe->NextSiblingElement("item"))
     {
        m_manifest.emplace(rfe->Attribute("id"), rfe->Attribute("href"));
     }
 
-    XMLElement* m_spine_ = package->FirstChildElement("spine");
-    XMLElement* itemref = m_spine_->FirstChildElement("itemref");
+    XMLElement* spine = package->FirstChildElement("spine");
+    XMLElement* itemref = spine->FirstChildElement("itemref");
 
-    for (XMLElement* rfe = itemref; rfe != nullptr; rfe = rfe->NextSiblingElement("itemref"))
+    for (XMLElement* it = itemref; it != nullptr; it = it->NextSiblingElement("itemref"))
     {
-        m_spine.push_back(rfe->Attribute("idref"));
+        m_spine.emplace_back(it->Attribute("idref"));
     }
 }
 
-void Book::ParsePages(BLUnZip& zipfile)
+void Book::parsePages(Unzipper& zip)
 {
-    std::vector<char> filter(std::numeric_limits<unsigned char>::max(), 1);
-    for (unsigned char c : m_valid)
+    for (auto i = 0; i < m_spine.size(); ++i)
     {
-        filter[c] = 0;
-    }
-
-    // m_spine.size(); or 7 for debug
-    for (unsigned int i = 0; i != m_spine.size(); i++)
-    {
-        TextVisitor tv;
-
-        std::string page ( zipfile.ExtractToString( m_manifest[m_spine[i]]) );
+        std::vector<unsigned char> buffer;
+        zip.extractEntryToMemory(m_container + m_manifest[m_spine[i]], buffer);
+    
+        // We do this extra step to ensure null termination and proper c string structure.
+        std::string data(buffer.begin(), buffer.end());
 
         XMLDocument doc;
-        doc.Parse(page.c_str());
-        XMLElement* body = doc.FirstChildElement("html")->FirstChildElement("body");
-        body->Accept(&tv);
+        doc.Parse(data.c_str());
 
-        for (auto& v : tv.GetText())
+        XMLElement* body = doc.FirstChildElement("body");
+        for (XMLElement* elem = body; elem != nullptr; elem = elem->NextSiblingElement())
         {
-            m_alltext.push_back(v);
-        }
-
-        // clean up text, remove any random / corrupt characters
-        // https://github.com/dietmarkuehl/cputube/blob/master/cpu/test/replace.cpp
-        for (auto& text : m_alltext)
-        {
-            std::replace_if(text.begin(), text.end(), [&](unsigned char c) { return filter[c]; }, '\'');
-        }
-
-        // now we have scrubbed the text, we need to remove weird comma thingys.
-        for (auto& text : m_alltext)
-        {
-            std::string badA = "'''";
-            std::string badB = " ''";
-            std::string good = "'";
-
-            std::string::size_type n = 0;
-            while ( ( n = text.find( badA, n ) ) != std::string::npos )
+            const char* text = elem->GetText();
+            if (text != 0)
             {
-                text.replace( n, badA.size(), good );
-                n += good.size();
-            }
-
-            std::string::size_type o = 0;
-            while ( ( o = text.find( badB, o ) ) != std::string::npos )
-            {
-                text.replace( o, badB.size(), good );
-                o += good.size();
+                m_text.emplace_back(text);
             }
         }
     }
 }
 
-std::string Book::GetBook()
+std::string Book::getBook() const
 {
     return m_book;
 }
-
-void Book::Reader(Gui& gui)
-{   
-    int ypos = 26;  
-    
-    // 50 character limit using fixed width font, start at y = 26, 12 pixels spacing per line..., 17 lines per page top screen, max looping is 236
-    // bottom screen is same, except only 46 characters per line.
-    for (int i = (gui.getBookPage() * 17); i < ((gui.getBookPage() * 17) + 17); i++)
-    {
-        sftd_draw_text(gui.getTextFont(), 24, ypos, RGBA8(0, 0, 0, 255), 12, m_alltext[i].c_str());
-        ypos += 12;
-    }
-} 

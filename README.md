@@ -1,25 +1,24 @@
-# Nintendo 3DS EBook Reader
+## Nintendo 3DS eBook Reader
 [Download](https://github.com/reworks/3DS_eBook_Reader/releases/latest "Download the latest release here.")
 
-## Instructions:
+### Instructions:
 Place books in a folder named "books" on the *root* of your SD card. Some books can take a while to load! Be patient!
 
-Use calibre (google it) to convert other formats to .epub. Make sure its as strict as possible when converting.
+Make sure your ebooks are in .epub 3 or later format. You can use tools like [sigil](https://sigil-ebook.com/) or [calibre](https://calibre-ebook.com/).
 
-MUST BE IN A VALID AND COMPLIANT .EPUB FORMAT. DRM-FREE EBOOK SHOPS ARE YOUR BEST BET.
+I recommend going to DRM-Free bookshops or public domain websites such as [Project Gutenberg](https://www.gutenberg.org/).
 
 IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 
-## Credits:
-- AlbertoSonic for initial codebase and graphics.
+### Credits:
+- AlbertoSonic for original repo + art.
 - cots on gbatemp for the new fancy artwork.
-- BernardoGiordano for pp2d
-- minizip for unzipping
-- tinyxml2 for xml parsing
-- BLUnzip for simplified C++ minizip
-- zlib for zip functions
-- The people at #cakey
-- Source Code Pro font: https://github.com/adobe-fonts/source-code-pro
+- BernardoGiordano for pp2d.
+- tinyxml2 for xml parsing.
+- sebastiandev for zipper.
+- citra team for citra.
+- The people at #cakey.
+- gutenberg for books to test with.
 
-## License:
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+### License:
+[See here.](https://github.com/reworks/3DS_eBook_Reader/blob/master/LICENSE.txt)

@@ -1,62 +1,104 @@
-// App.cpp
-// Main application class
+///
+/// App.cpp
+/// Main application class.
+///
 
 #include <unistd.h>
 
-#include <sf2d.h>
-#include <sftd.h>
+#include "pp2d/pp2d.h"
 
 #include "App.hpp"
-#include "Time.hpp"
 
-#ifndef EXIT_SUCCESS
-	#define EXIT_SUCCESS 0
-#endif
-
-void App::Init()
+App::App()
+:m_isRunning(true), m_isBookMode(false)
 {
-	// Initialize services
 	romfsInit();
 	aptInit();
 	ptmuInit();
 	hidInit();
 
-	// Initialize sf2d
-	sf2d_init();
-	sf2d_set_clear_color(RGBA8(0, 0, 0, 255));
-	sf2d_set_vblank_wait(0);
-	
-	sftd_init();
-	
-	m_gui.Load();
-
-	m_input.SetCurMode(AppState::Menu);
+	pp2d_init();
+	pp2d_set_3D(0);
+	pp2d_set_texture_filter(GPU_LINEAR, GPU_NEAREST);
 }
 
-void App::Event()
+App::~App()
 {
-	m_input.HandleEvents();
+	pp2d_exit();
 
-	if (m_input.getKeyDown() & KEY_START) {
-		m_input.SetRunning(false);
-	}
+	hidExit();
+	ptmuExit();
+	aptExit();
+	romfsExit();
+}
 
-	switch (m_input.CurMode())
+int App::run()
+{
+	while (m_input.m_running)
 	{
-		case AppState::Menu:
-			m_gui.HandleEventsMenu(m_input, m_ren);	
-		break;
+		aptMainLoop();
+		
+		event();
+		update();
+		render();
+	}
 
-		case AppState::Text:
-			m_gui.HandleEventsBook(m_input);
-		break;
+	return 0;
+}
+
+void App::event()
+{
+	m_input.checkForEvents();
+
+	if (m_input.getKeyDown() & KEY_SELECT)
+	{
+		m_input.m_running = false;
+	}
+
+	if (m_isBookMode)
+	{
+		// book events
+	}
+	else
+	{
+		// menu events
 	}
 }
 
-void App::Update()
+void App::update()
 {
-	m_gui.Update();
+	// update gui?
 }
+
+void App::render()
+{
+	if (m_isBookMode)
+	{
+		// draw book crap
+		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
+
+		pp2d_end_draw();
+
+
+		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);
+
+		pp2d_end_draw();
+	}
+	else
+	{
+		// draw menu crap
+		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
+
+		pp2d_end_draw();
+
+
+		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);
+
+		pp2d_end_draw();
+	}
+}
+
+/*
 
 void App::Render()
 {
@@ -95,61 +137,4 @@ void App::Render()
 		break;
 	}
 }
-
-void App::End()
-{
-	m_gui.Close();
-
-	sftd_fini();
-	sf2d_fini();
-
-	hidExit();
-	ptmuExit();
-	aptExit();
-	romfsExit();
-}
-
-int App::Run()
-{
-	uint64_t lastTime = re::NanoTime();
-		
-	double delta = 0.0;
-	const double ns = 1000000000.0 / 60.0;
-	uint64_t timer = re::MillisTime();
-	int frames = 0;
-	int updates = 0;
-
-	Init();
-
-	while (m_input.IsRunning())
-	{
-		uint64_t now = re::NanoTime();
-		delta += (now - lastTime) / ns;
-		lastTime = now;
-		
-		aptMainLoop();
-		if (delta >= 1.0)
-		{		
-			Event();
-			Update();
-			
-			updates++;
-			delta--;
-		}
-
-		Render();
-		frames++;
-
-		if ((re::MillisTime() - timer) > 1000)
-		{
-			timer += 1000;
-
-			updates = 0;
-			frames = 0;
-		}
-	}
-
-	End();
-
-	return EXIT_SUCCESS;
-}
+*/

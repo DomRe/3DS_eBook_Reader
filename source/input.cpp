@@ -4,51 +4,26 @@
 #include "Input.hpp"
 
 Input::Input()
+:m_kDown(0), m_running(true)
 {
-	m_running = true;
-	m_as = AppState::Menu;
 }
 
-void Input::HandleEvents()
+void Input::checkForEvents()
 {
 	hidScanInput();
 	m_kDown = hidKeysDown();
 
-	touchPosition touch;
-	hidTouchRead(&touch);
-
-	m_posX = touch.px;
-	m_posY = touch.py;
-}
-
-void Input::SetRunning(bool isRunning)
-{
-	m_running = isRunning;
-}
-
-bool Input::IsRunning() const
-{
-	return m_running;
-}
-
-void Input::SetCurMode(AppState as)
-{
-	m_as = as;
-}
-
-AppState Input::CurMode() const
-{
-	return m_as;
+	hidTouchRead(&m_touch);
 }
 
 u16 Input::getPosX() const
 {
-	return m_posX;
+	return m_touch.px;
 }
 
 u16 Input::getPosY() const
 {
-	return m_posY;
+	return m_touch.py;
 }
 
 u32 Input::getKeyDown() const

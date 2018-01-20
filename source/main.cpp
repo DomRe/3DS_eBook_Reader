@@ -1,11 +1,17 @@
-// main.cpp
-// entry point
+///
+/// main.cpp
+/// Entry Point
+///
 
 #include "App.hpp"
 
+///
+/// This is where the application is created.
+/// Entry point.
+///
 int main()
 {
-	App app;	
+	App app;
 
-	return app.Run();
+	return app.run();
 }
