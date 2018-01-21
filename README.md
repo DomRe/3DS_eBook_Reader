@@ -13,7 +13,7 @@ IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 ### Credits:
 - AlbertoSonic for original repo + art.
 - cots on gbatemp for the new fancy artwork.
-- BernardoGiordano for pp2d.
+- BernardoGiordano for pp2d and makefile
 - tinyxml2 for xml parsing.
 - sebastiandev for zipper.
 - citra team for citra.

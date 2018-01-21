@@ -1,9 +1,8 @@
 # system stuff
 Thumbs.db
 
-# folder stuff
-*.txt
-
 # project stuff
 citra/
-*.bat
+build/
+out/
+*.lnk
