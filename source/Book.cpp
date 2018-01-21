@@ -20,7 +20,7 @@ Book::Book(const std::string& epub)
 {
     m_book = "sdmc:/books/" + epub;
     Unzipper zip(epub);
-    /// all the bugs :D
+    
     parseContainer(zip);
     parseOPF(zip);
     parsePages(zip);

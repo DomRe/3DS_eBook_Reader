@@ -242,8 +242,7 @@ void GUI::drawFileSelect()
 			end = m_files.size() - 1;
 		}
 
-		// bug ??
-		for (int i = begin; i < end+1; ++i)
+		for (int i = begin; i < end; ++i)
 		{
 			pp2d_draw_text(30.0f, y, SCALE, SCALE, RGBA8(0, 0, 0, 255), m_files[i].c_str());
 			y += 20.0f;
