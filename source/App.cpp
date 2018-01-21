@@ -61,7 +61,7 @@ void App::event()
 		m_input.m_running = false;
 	}
 
-	m_gui.event(m_input, m_isBookMode);
+	m_gui.event(m_input, &m_isBookMode);
 }
 
 void App::update()
@@ -73,7 +73,9 @@ void App::render()
 {
 	if (m_isBookMode)
 	{
-		
+		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
+			pp2d_draw_text_center(GFX_TOP, 0.0f, 2.0f, 2.0f, RGBA8(0, 0, 0, 255), "Book loaded successfully.");
+		pp2d_end_draw();
 	}
 	else
 	{

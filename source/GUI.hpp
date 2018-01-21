@@ -28,7 +28,7 @@ public:
 	///
 	/// Process events. Boolean to see if processing menu or book events.
 	///
-	void event(Input& input, bool isBook);
+	void event(Input& input, bool* isBookMode);
 
 	///
 	/// Update ui and stuff.
@@ -51,11 +51,6 @@ public:
  	void drawFileSelect();
 
  	///
- 	/// Open a book to read.
- 	///
- 	void openBook(const std::string& file);
-
- 	///
  	/// Remove a book from the filesystem.
  	/// 
  	void removeBook(const std::string& file);
@@ -72,6 +67,8 @@ private:
 	Texture* m_textBG;
 	Texture* m_bookmarkedBG;
 	Texture* m_back;
+
+	Book* m_book = nullptr;
 
 	std::vector<Texture*> m_batteryLevels;
 	std::vector<std::string> m_files;

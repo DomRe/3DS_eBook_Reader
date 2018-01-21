@@ -57,6 +57,12 @@ void GUI::init()
 
 void GUI::exit()
 {
+	if (m_book != nullptr)
+	{
+		delete m_book;
+		m_book = nullptr;
+	}
+
 	delete m_next;
 	delete m_prev;
 	delete m_controls;
@@ -75,11 +81,11 @@ void GUI::exit()
 	}
 }
 
-void GUI::event(Input& input, bool isBook)
+void GUI::event(Input& input, bool* isBookMode)
 {
 	if (!m_loading)
 	{
-		if (!isBook)
+		if (!(*isBookMode))
 		{
 			if (input.getKeyDown() & KEY_UP)
 			{
@@ -116,6 +122,12 @@ void GUI::event(Input& input, bool isBook)
 				removeBook(m_files[m_index + ((8 * m_curFilePage) - 8)]);
 			}
 
+			if (input.getKeyDown() & KEY_A) 
+			{ 
+				m_loading = true;
+				m_selected = m_files[m_index + ((8 * m_curFilePage) - 8)];
+			}
+
 			if (input.getPosX() >= 159 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241)
 			{
 				if (m_drawAbout == true)
@@ -135,8 +147,15 @@ void GUI::event(Input& input, bool isBook)
 		}
 		else
 		{
-			
+			// BOOK EVENTS
 		}
+	}
+	else
+	{
+		m_book = new Book(m_selected);
+		m_loading = false;
+		*isBookMode = true;
+		m_drawAbout = false;
 	}
 }
 
@@ -215,25 +234,16 @@ void GUI::drawFileSelect()
 			m_curFilePage = pageCount;
 		}
 
-		int begin;
-		int end;
-		if (m_curFilePage == 1)
-		{
-			begin = 0;
-			end = 7;
-		}
-		else
-		{
-			begin = (m_curFilePage * 8) - 8;
-			end = begin + 7;
-		}
+		int begin = (m_curFilePage * 8) - 8;
+		int end = begin + 7;
 
 		if (end > m_files.size())
 		{
-			end = m_files.size();
+			end = m_files.size() - 1;
 		}
 
-		for (int i = begin; i < end; ++i)
+		// bug ??
+		for (int i = begin; i < end+1; ++i)
 		{
 			pp2d_draw_text(30.0f, y, SCALE, SCALE, RGBA8(0, 0, 0, 255), m_files[i].c_str());
 			y += 20.0f;
@@ -247,11 +257,6 @@ void GUI::drawFileSelect()
 		float yLoad = ((float)SCREEN_HEIGHT / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f);
     	pp2d_draw_text(xLoad, yLoad, 1.0f, 1.0f, RGBA8(0, 0, 0, 255), m_loadText);
 	}
-}
-
-void GUI::openBook(const std::string& file)
-{
-
 }
 
 void GUI::removeBook(const std::string& file)
@@ -300,76 +305,7 @@ std::string GUI::getExtension(const std::string& filename)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
-
-
-
-void Gui::HandleEventsMenu(Input& input, Renderer& ren)
-{
-	if (m_loading)
-	{
-		if (m_selected != "")
-		{
-			OpenBook(m_selected);
-			m_loading = false;
-			input.SetCurMode(AppState::Text);
-			m_drawAbout = false;
-		}
-	}
-
-	
-	if (input.getKeyDown() & KEY_LEFT) { m_curPage--; m_index = 0; }
-	if (input.getKeyDown() & KEY_RIGHT) { m_curPage++; m_index = 0; }
-	
-	// correct values
-	if (m_index < 0) m_index = 0;
-	if (m_index > 6) m_index = 6;
-	if (m_curPage < 0) m_curPage = 0;
-
-	
-
-	if (input.getKeyDown() & KEY_A) { 
-		m_selected = m_files[m_index+(7*m_curPage)]; 
-		if (m_selected != "") {
-			m_loading = true;
-		}
-	}
-	
-
-	if (input.getPosX() >= 295 && input.getPosX() <= 320 && input.getPosY() >= 65 && input.getPosY() <= 137) {
-		m_curPage++; 
-		m_index = 0;
-	}
-
-	if (input.getPosX() >= 9 && input.getPosX() <= 31 && input.getPosY() >= 65 && input.getPosY() <= 137) {
-		m_curPage--; 
-		m_index = 0;
-	}
-
-
-}
-
 void Gui::HandleEventsBook(Input& input)
 {
 	if (!m_showBookmarks)
@@ -446,15 +382,6 @@ void Gui::HandleEventsBook(Input& input)
 			m_showBookmarks = false;
 		}
 	}
-}
-
-
-
-void Gui::OpenBook(const std::string& bookName)
-{
-	std::string fullBook = "/books/"+bookName;
-	
-	m_book.LoadBook(fullBook.c_str());
 }
 
 void Gui::DrawTextBG()
