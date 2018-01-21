@@ -169,13 +169,13 @@ void GUI::drawStatusBar()
 		m_charging->draw(0, 0);
 	}
 
-	std::string time = clock().c_str();
+	std::string time = clock();
 	float x = ((float)TOP_WIDTH - pp2d_get_text_width(time.c_str(), SCALE, SCALE) - 6.0f);
 	pp2d_draw_text(x, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), time.c_str());
 
     if (!m_drawAbout)
     {
-    	std::string bookTitle = removeExtension(m_selected).c_str();
+    	std::string bookTitle = removeExtension(m_selected);
     	float x = ((float)TOP_WIDTH / 2.0f) - (pp2d_get_text_width(bookTitle.c_str(), SCALE, SCALE) / 2.0f);
     	pp2d_draw_text(x, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), bookTitle.c_str());
     }
@@ -256,7 +256,7 @@ void GUI::openBook(const std::string& file)
 
 void GUI::removeBook(const std::string& file)
 {
-	std::string path = "/books/" + file;
+	std::string path = "sdmc:/books/" + file;
 	remove(path.c_str());
 
 	m_files.erase(std::find(m_files.begin(), m_files.end(), file));
