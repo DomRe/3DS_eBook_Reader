@@ -90,6 +90,7 @@ private:
 	bool m_drawAbout = false;
 	bool m_loading = false;
 
+	int m_curBookPage = 0;
 	int m_curFilePage = 1;
 	int m_index = 0;
 

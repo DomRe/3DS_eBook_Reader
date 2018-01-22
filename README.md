@@ -12,6 +12,8 @@ The reason I recommend this is because this app DOES NOT SUPPORT BOOKS WITH DRM.
 
 IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 
+THIS APP IS ONLY TESTED WITH ENGLISH LANGUAGE BOOKS.
+
 ### Credits:
 - AlbertoSonic for original repo + art.
 - cots on gbatemp for the new fancy artwork.

@@ -17,6 +17,17 @@
 
 #define SCALE 0.5f
 
+namespace temp
+{
+	template<typename T>
+	std::string to_string(const T& value)
+	{
+	    std::ostringstream oss;
+	    oss << value;
+	    return oss.str();
+	}
+}
+
 void GUI::init()
 {
 	m_top = new Texture(3, "romfs:/top.png");
@@ -161,6 +172,24 @@ void GUI::event(Input& input, bool* isBookMode)
 				delete m_book;
 				m_book = nullptr;
 			}
+
+			if ((input.getKeyDown() & KEY_LEFT) || (input.getKeyDown() & KEY_L))
+			{
+				--m_curBookPage;
+				if (m_curBookPage < 0)
+				{
+					m_curBookPage = 0;
+				}
+			}
+			
+			if ((input.getKeyDown() & KEY_RIGHT) || (input.getKeyDown() & KEY_R))
+			{ 
+				++m_curBookPage;
+				if (m_curBookPage > m_book->getBookText().size())
+				{
+					m_curBookPage = m_book->getBookText().size();
+				}
+			}
 		}
 	}
 	else
@@ -280,7 +309,7 @@ void GUI::drawBookTop()
 {
 	m_textBG->draw(0, 0);
 
-
+	pp2d_draw_text_wrap(10.0f, 25.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), static_cast<float>(TOP_WIDTH), temp::to_string(m_book->getBookText().size()).c_str());
 }
 
 void GUI::drawBookControls()
@@ -323,8 +352,6 @@ std::string GUI::getExtension(const std::string& filename)
 {
     return filename.substr(filename.find_last_of(".")); 
 }
-
-
 
 
 
@@ -600,11 +627,5 @@ void Gui::RemoveBookmark(int element)
 }
 
 
-template<typename T>
-std::string Gui::to_string(const T& value)
-{
-    std::ostringstream oss;
-    oss << value;
-    return oss.str();
-}
+
 */

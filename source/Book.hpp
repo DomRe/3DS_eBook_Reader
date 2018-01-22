@@ -39,12 +39,7 @@ public:
 	/// Parse the ebook pages.
 	///
 	void parsePages(BLUnZip& zip);
-
-	///
-	/// Get current book name.
-	///
-	std::string getBook() const;
-
+	
 	///
 	/// Returns the text of the book.
 	/// 

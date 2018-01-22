@@ -105,18 +105,9 @@ void Book::parsePages(BLUnZip& zip)
         XMLElement* body = doc.FirstChildElement("body");
         for (XMLElement* elem = body; elem != nullptr; elem = elem->NextSiblingElement())
         {
-            const char* text = elem->GetText();
-            if (text != 0)
-            {
-                m_text.emplace_back(text);
-            }
+            m_text.push_back(elem->GetText());
         }
     }
-}
-
-std::string Book::getBook() const
-{
-    return m_book;
 }
 
 const std::vector<std::string>& Book::getBookText() const
