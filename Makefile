@@ -17,10 +17,10 @@ APP_AUTHOR          :=	reworks
 TARGET              :=	$(subst $e ,_,$(notdir $(APP_TITLE)))
 OUTDIR              :=	out
 BUILD               :=	build
-SOURCES             :=	source/zipper \
-						source/pp2d \
+SOURCES             :=	source/blzip/minizip \
+						source/blzip \
 						source/tinyxml2 \
-						source/zipper/minizip \
+						source/pp2d \
 						source
 INCLUDES            :=	include
 ROMFS               :=	romfs

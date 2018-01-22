@@ -11,6 +11,14 @@
    See the accompanying LICENSE file for the full text of the license.
 */
 
+//taken and adapted from https://stackoverflow.com/a/13492589
+
+// save diagnostic state
+#pragma GCC diagnostic push 
+
+// turn off the specific warning. Can also use "-Wall"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -26,9 +34,9 @@
 #  define FTELLO_FUNC(stream) ftello(stream)
 #  define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
 #else
-#  define FOPEN_FUNC(filename, mode) fopen(filename, mode)
-#  define FTELLO_FUNC(stream) ftello(stream)
-#  define FSEEKO_FUNC(stream, offset, origin) fseeko(stream, offset, origin)
+#  define FOPEN_FUNC(filename, mode) fopen64(filename, mode)
+#  define FTELLO_FUNC(stream) ftello64(stream)
+#  define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
 
 /* I've found an old Unix (a SunOS 4.1.3_U1) without all SEEK_* defined.... */
@@ -176,7 +184,7 @@ static voidpf ZCALLBACK fopendisk64_file_func (voidpf opaque, voidpf stream, int
     strncpy(diskFilename, ioposix->filename, ioposix->filenameLength);
     for (i = ioposix->filenameLength - 1; i >= 0; i -= 1)
     {
-        if (diskFilename[i] != '.') 
+        if (diskFilename[i] != '.')
             continue;
         snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
         break;
@@ -201,7 +209,7 @@ static voidpf ZCALLBACK fopendisk_file_func (voidpf opaque, voidpf stream, int n
     strncpy(diskFilename, ioposix->filename, ioposix->filenameLength);
     for (i = ioposix->filenameLength - 1; i >= 0; i -= 1)
     {
-        if (diskFilename[i] != '.') 
+        if (diskFilename[i] != '.')
             continue;
         snprintf(&diskFilename[i], ioposix->filenameLength - i, ".z%02d", number_disk + 1);
         break;
@@ -367,3 +375,6 @@ void fill_fopen64_filefunc (zlib_filefunc64_def* pzlib_filefunc_def)
     pzlib_filefunc_def->zerror_file = ferror_file_func;
     pzlib_filefunc_def->opaque = NULL;
 }
+
+// turn the warnings back on
+#pragma GCC diagnostic pop

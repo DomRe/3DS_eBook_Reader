@@ -10,7 +10,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "zipper/unzipper.h"
+#include "blzip/BLUnZip.h"
 
 class Book
 {
@@ -28,17 +28,17 @@ public:
 	///
 	/// Parse the ebook container.
 	///
-	void parseContainer(zipper::Unzipper& zip);
+	void parseContainer(BLUnZip& zip);
 
 	///
 	/// Parse the ebook opf.
 	///
-	void parseOPF(zipper::Unzipper& zip);
+	void parseOPF(BLUnZip& zip);
 
 	///
 	/// Parse the ebook pages.
 	///
-	void parsePages(zipper::Unzipper& zip);
+	void parsePages(BLUnZip& zip);
 
 	///
 	/// Get current book name.

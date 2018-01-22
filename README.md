@@ -17,7 +17,7 @@ IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 - cots on gbatemp for the new fancy artwork.
 - BernardoGiordano for pp2d and makefile
 - tinyxml2 for xml parsing.
-- sebastiandev for zipper.
+- BleuLlama for BLZip
 - citra team for citra.
 - The people at #cakey.
 - gutenberg for books to test with.

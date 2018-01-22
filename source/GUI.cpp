@@ -103,6 +103,13 @@ void GUI::event(Input& input, bool* isBookMode)
 				{
 					m_index = 7;
 				}
+
+				int correctPos = m_index + ((8 * m_curFilePage) - 8);
+				if (correctPos >= m_files.size())
+				{
+					correctPos = m_files.size() - 1;
+					m_index = correctPos - ((8 * m_curFilePage) - 8);
+				}
 			}
 
 			if ((input.getKeyDown() & KEY_LEFT) || (input.getKeyDown() & KEY_L))
@@ -189,14 +196,14 @@ void GUI::drawStatusBar()
 	}
 
 	std::string time = clock();
-	float x = ((float)TOP_WIDTH - pp2d_get_text_width(time.c_str(), SCALE, SCALE) - 6.0f);
-	pp2d_draw_text(x, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), time.c_str());
+	float xClockPosStatusBar = ((float)TOP_WIDTH - pp2d_get_text_width(time.c_str(), SCALE, SCALE) - 6.0f);
+	pp2d_draw_text(xClockPosStatusBar, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), time.c_str());
 
     if (!m_drawAbout)
     {
     	std::string bookTitle = removeExtension(m_selected);
-    	float x = ((float)TOP_WIDTH / 2.0f) - (pp2d_get_text_width(bookTitle.c_str(), SCALE, SCALE) / 2.0f);
-    	pp2d_draw_text(x, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), bookTitle.c_str());
+    	float xBookTitleStatusBar = (static_cast<float>(TOP_WIDTH) / 2.0f) - (pp2d_get_text_width(bookTitle.c_str(), SCALE, SCALE) / 2.0f);
+    	pp2d_draw_text(xBookTitleStatusBar, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), bookTitle.c_str());
     }
 }
 
@@ -235,11 +242,16 @@ void GUI::drawFileSelect()
 		}
 
 		int begin = (m_curFilePage * 8) - 8;
-		int end = begin + 7;
+		int end = begin + 8;
+
+		if (begin < 0)
+		{
+			begin = 0;
+		}
 
 		if (end > m_files.size())
 		{
-			end = m_files.size() - 1;
+			end = m_files.size();
 		}
 
 		for (int i = begin; i < end; ++i)
@@ -248,13 +260,14 @@ void GUI::drawFileSelect()
 			y += 20.0f;
 		}
 
-		pp2d_draw_text((30.0f - pp2d_get_text_width("->", SCALE, SCALE)) - 2.0f, ((float)m_index + 1.0f) * 20.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), "->");
+		float indexYPos = 20.0f + (m_index * 20);
+		pp2d_draw_text((30.0f - pp2d_get_text_width("->", SCALE, SCALE)) - 2.0f, indexYPos, SCALE, SCALE, RGBA8(0, 0, 0, 255), "->");
 	}
 	else
 	{
-		float xLoad = ((float)TOP_WIDTH / 2.0f) - (pp2d_get_text_width(m_loadText, 1.0f, 1.0f) / 2.0f);
-		float yLoad = ((float)SCREEN_HEIGHT / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f);
-    	pp2d_draw_text(xLoad, yLoad, 1.0f, 1.0f, RGBA8(0, 0, 0, 255), m_loadText);
+		float xLoad = (static_cast<float>(BOTTOM_WIDTH) / 2.0f) - (pp2d_get_text_width(m_loadText, 1.0f, 1.0f) / 2.0f);
+		float yLoad = (static_cast<float>(SCREEN_HEIGHT) / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f);
+		pp2d_draw_text(xLoad, yLoad, 1.0f, 1.0f, RGBA8(0, 0, 0, 255), m_loadText);
 	}
 }
 

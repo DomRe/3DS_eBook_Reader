@@ -14,6 +14,12 @@
    See the accompanying LICENSE file for the full text of the license.
 */
 
+// save diagnostic state
+#pragma GCC diagnostic push 
+
+// turn off the specific warning. Can also use "-Wall"
+#pragma GCC diagnostic ignored "-Wtype-limits"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2019,3 +2025,5 @@ extern int ZEXPORT zipClose(zipFile file, const char* global_comment)
 
     return err;
 }
+
+#pragma GCC diagnostic pop

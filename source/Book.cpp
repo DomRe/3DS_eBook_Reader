@@ -13,19 +13,18 @@
 
 #include "Book.hpp"
 
-using namespace zipper;
 using namespace tinyxml2;
 
 Book::Book(const std::string& epub)
 {
     m_book = "sdmc:/books/" + epub;
-    Unzipper zip(epub);
+    BLUnZip zip(epub);
     
     parseContainer(zip);
-    parseOPF(zip);
-    parsePages(zip);
+    //parseOPF(zip);
+    //parsePages(zip);
 
-    zip.close();
+    zip.Close();
 }
 
 Book::~Book()
@@ -35,27 +34,24 @@ Book::~Book()
     m_text.clear();
 
     m_book = "";
-    m_opf = ""; 
+    m_opf = "";
     m_title = "";
     m_author = "";
     m_container = "";
-}    
+}
 
-void Book::parseContainer(Unzipper& zip)
+void Book::parseContainer(BLUnZip& zip)
 {
-    std::vector<unsigned char> buffer;
-    zip.extractEntryToMemory("META-INF/container.xml", buffer);
-    
-    // We do this extra step to ensure null termination and proper c string structure.
-    std::string data(buffer.begin(), buffer.end());
+    std::string data = zip.ExtractToString("META-INF/container.xml");
 
     XMLDocument doc;
     doc.Parse(data.c_str());
 
     XMLElement* container = doc.FirstChildElement("container");
-    XMLElement* rootfiles = container->FirstChildElement("rootfiles");
-    XMLElement* rootfile = rootfiles->FirstChildElement("rootfile");
+    //XMLElement* rootfiles = container->FirstChildElement("rootfiles");
+    //XMLElement* rootfile = rootfiles->FirstChildElement("rootfile");
 
+    /*
     m_opf = rootfile->Attribute("full-path");
 
     auto pos = m_opf.find("content.opf");
@@ -66,16 +62,12 @@ void Book::parseContainer(Unzipper& zip)
     else
     {
         m_container = m_opf.substr(0, pos);
-    }
+    }*/
 }
 
-void Book::parseOPF(Unzipper& zip)
+void Book::parseOPF(BLUnZip& zip)
 {
-    std::vector<unsigned char> buffer;
-    zip.extractEntryToMemory(m_opf, buffer);
-    
-    // We do this extra step to ensure null termination and proper c string structure.
-    std::string data(buffer.begin(), buffer.end());
+    std::string data = zip.ExtractToString(m_opf);
     
     XMLDocument doc;
     doc.Parse(data.c_str());
@@ -102,15 +94,11 @@ void Book::parseOPF(Unzipper& zip)
     }
 }
 
-void Book::parsePages(Unzipper& zip)
+void Book::parsePages(BLUnZip& zip)
 {
     for (size_t i = 0; i < m_spine.size(); ++i)
     {
-        std::vector<unsigned char> buffer;
-        zip.extractEntryToMemory(m_container + m_manifest[m_spine[i]], buffer);
-    
-        // We do this extra step to ensure null termination and proper c string structure.
-        std::string data(buffer.begin(), buffer.end());
+        std::string data = zip.ExtractToString(m_container + m_manifest[m_spine[i]]);
 
         XMLDocument doc;
         doc.Parse(data.c_str());
