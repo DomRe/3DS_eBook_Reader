@@ -89,7 +89,7 @@ void Book::parseOPF(BLUnZip& zip)
 
     for (XMLElement* it = itemref; it != nullptr; it = it->NextSiblingElement("itemref"))
     {
-        m_spine.emplace_back(it->Attribute("idref"));
+        m_spine.push_back(it->Attribute("idref"));
     }
 }
 
@@ -102,10 +102,12 @@ void Book::parsePages(BLUnZip& zip)
         XMLDocument doc;
         doc.Parse(data.c_str());
 
-        XMLElement* body = doc.FirstChildElement("body");
-        for (XMLElement* elem = body; elem != nullptr; elem = elem->NextSiblingElement())
+        XMLElement* html = doc.FirstChildElement("html");
+        XMLElement* body = html->FirstChildElement("body");
+
+        for (XMLElement* next = body->FirstChildElement(); next != nullptr; next = next->NextSiblingElement())
         {
-            m_text.push_back(elem->GetText());
+            m_text.push_back(next->GetText());
         }
     }
 }

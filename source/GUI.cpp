@@ -17,17 +17,6 @@
 
 #define SCALE 0.5f
 
-namespace temp
-{
-	template<typename T>
-	std::string to_string(const T& value)
-	{
-	    std::ostringstream oss;
-	    oss << value;
-	    return oss.str();
-	}
-}
-
 void GUI::init()
 {
 	m_top = new Texture(3, "romfs:/top.png");
@@ -309,7 +298,7 @@ void GUI::drawBookTop()
 {
 	m_textBG->draw(0, 0);
 
-	pp2d_draw_text_wrap(10.0f, 25.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), static_cast<float>(TOP_WIDTH), temp::to_string(m_book->getBookText().size()).c_str());
+	pp2d_draw_text_wrap(10.0f, 25.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), static_cast<float>(TOP_WIDTH), m_book->getBookText()[m_curBookPage].c_str());
 }
 
 void GUI::drawBookControls()
