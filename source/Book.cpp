@@ -18,11 +18,11 @@ using namespace tinyxml2;
 Book::Book(const std::string& epub)
 {
     m_book = "sdmc:/books/" + epub;
-    BLUnZip zip(epub);
+    BLUnZip zip(m_book);
     
     parseContainer(zip);
-    //parseOPF(zip);
-    //parsePages(zip);
+    parseOPF(zip);
+    parsePages(zip);
 
     zip.Close();
 }
@@ -48,10 +48,9 @@ void Book::parseContainer(BLUnZip& zip)
     doc.Parse(data.c_str());
 
     XMLElement* container = doc.FirstChildElement("container");
-    //XMLElement* rootfiles = container->FirstChildElement("rootfiles");
-    //XMLElement* rootfile = rootfiles->FirstChildElement("rootfile");
+    XMLElement* rootfiles = container->FirstChildElement("rootfiles");
+    XMLElement* rootfile = rootfiles->FirstChildElement("rootfile");
 
-    /*
     m_opf = rootfile->Attribute("full-path");
 
     auto pos = m_opf.find("content.opf");
@@ -62,7 +61,7 @@ void Book::parseContainer(BLUnZip& zip)
     else
     {
         m_container = m_opf.substr(0, pos);
-    }*/
+    }
 }
 
 void Book::parseOPF(BLUnZip& zip)

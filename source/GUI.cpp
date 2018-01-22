@@ -19,8 +19,6 @@
 
 void GUI::init()
 {
-	m_next = new Texture(1, "romfs:/NextFM.png");
-	m_prev = new Texture(2, "romfs:/PrevFM.png");
 	m_top = new Texture(3, "romfs:/top.png");
 	m_bottom = new Texture(4, "romfs:/bottom.png");
 	m_controls = new Texture(5, "romfs:/controls.png");
@@ -63,8 +61,6 @@ void GUI::exit()
 		m_book = nullptr;
 	}
 
-	delete m_next;
-	delete m_prev;
 	delete m_controls;
 	delete m_top;
 	delete m_bottom;
@@ -153,8 +149,18 @@ void GUI::event(Input& input, bool* isBookMode)
 			}
 		}
 		else
-		{
-			// BOOK EVENTS
+		{	
+			// Book Events
+			
+			if ((input.getKeyDown() & KEY_B)  || (input.getPosX() >= 20 && input.getPosX() <= 103 && input.getPosY() >= 18 && input.getPosY() <= 185))
+			{ 
+				*isBookMode = false;
+				m_selected = "";
+				m_curFilePage = 1;
+				m_index = 0;
+				delete m_book;
+				m_book = nullptr;
+			}
 		}
 	}
 	else
@@ -201,14 +207,13 @@ void GUI::drawStatusBar()
 
     if (!m_drawAbout)
     {
-    	std::string bookTitle = removeExtension(m_selected);
-    	float xBookTitleStatusBar = (static_cast<float>(TOP_WIDTH) / 2.0f) - (pp2d_get_text_width(bookTitle.c_str(), SCALE, SCALE) / 2.0f);
-    	pp2d_draw_text(xBookTitleStatusBar, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), bookTitle.c_str());
+    	pp2d_draw_text(20.0f, 2.5f, SCALE, SCALE, RGBA8(0, 0, 0, 255), removeExtension(m_selected).c_str());
     }
 }
 
 void GUI::drawFileSelect()
 {
+	pp2d_draw_rectangle(0, 217, 320, 24, RGBA8(156, 156, 156, 255));
 	m_bottom->draw(0, 0);
 	
 	if (!m_loading)
@@ -269,6 +274,18 @@ void GUI::drawFileSelect()
 		float yLoad = (static_cast<float>(SCREEN_HEIGHT) / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f);
 		pp2d_draw_text(xLoad, yLoad, 1.0f, 1.0f, RGBA8(0, 0, 0, 255), m_loadText);
 	}
+}
+
+void GUI::drawBookTop()
+{
+	m_textBG->draw(0, 0);
+
+
+}
+
+void GUI::drawBookControls()
+{
+	m_controls->draw(0, 0);
 }
 
 void GUI::removeBook(const std::string& file)
@@ -337,12 +354,7 @@ void Gui::HandleEventsBook(Input& input)
 
 			if (m_bookPage < 0) { m_bookPage = 0; }
 
-			if (input.getPosX() >= 20 && input.getPosX() <= 103 && input.getPosY() >= 18 && input.getPosY() <= 185) {
-				input.SetCurMode(AppState::Menu);
-				CloseBook();
-				m_selected = "";
-				m_bookPage = 0;
-			}
+			
 
 			if (input.getPosX() >= 120 && input.getPosX() <= 203 && input.getPosY() >= 18 && input.getPosY() <= 185) {
 				LoadBookmark();
@@ -396,11 +408,6 @@ void Gui::HandleEventsBook(Input& input)
 	}
 }
 
-void Gui::DrawTextBG()
-{
-	sf2d_draw_texture(m_textBG, 0, 0);
-}
-
 void Gui::DrawBook(Gui& gui)
 {
 	if (!m_drawAbout)
@@ -428,7 +435,7 @@ void Gui::DrawControls()
 
 		if (m_curPageBookmark == 0) {
 			m_beginBookmark = 0;
-			m_endBookmark = 7; 
+			m_endBookmark = 7;
 		} else {
 			m_beginBookmark = (7*m_curPageBookmark);
 			m_endBookmark = (7*m_curPageBookmark) + 7;

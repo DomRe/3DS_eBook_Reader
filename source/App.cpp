@@ -74,14 +74,13 @@ void App::render()
 	if (m_isBookMode == true)
 	{
 		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
+			m_gui.drawBookTop();
 			m_gui.drawStatusBar();
-			pp2d_draw_text((static_cast<float>(BOTTOM_WIDTH) / 2.0f) - (pp2d_get_text_width("Book loaded.", 1.0f, 1.0f) / 2.0f), 
-					       (static_cast<float>(SCREEN_HEIGHT) / 2.0f) - (pp2d_get_text_height("Book loaded.", 1.0f, 1.0f) / 2.0f), 
-					       1.0f, 1.0f, RGBA8(255, 255, 255, 255), "Book loaded.");
+
 		pp2d_end_draw();
 		
 		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);
-			pp2d_draw_rectangle(0, 0, BOTTOM_WIDTH, SCREEN_HEIGHT, RGBA8(255, 255, 255, 255));
+			m_gui.drawBookControls();
 		pp2d_end_draw();
 	}
 	else
