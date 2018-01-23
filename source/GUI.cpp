@@ -298,7 +298,7 @@ void GUI::drawBookTop()
 {
 	m_textBG->draw(0, 0);
 
-	pp2d_draw_text_wrap(10.0f, 25.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), static_cast<float>(TOP_WIDTH), m_book->getBookText()[m_curBookPage].c_str());
+	pp2d_draw_text_wrap(10.0f, 25.0f, SCALE, SCALE, RGBA8(0, 0, 0, 255), 380.0f, m_book->getBookText()[m_curBookPage].c_str());
 }
 
 void GUI::drawBookControls()

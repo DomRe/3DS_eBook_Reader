@@ -9,11 +9,28 @@
 #include <iostream>
 #include <algorithm>
 
+#include "pp2d/pp2d.h"
 #include "tinyxml2/tinyxml2.h"
 
 #include "Book.hpp"
 
 using namespace tinyxml2;
+
+void shortenString(std::vector<std::string>& vec, std::string str)
+{
+	if (str.size() > 715)
+	{
+		std::string final = str.substr(0, 715);
+		vec.push_back(final);
+
+		std::string rest = str.substr(716, str.size());
+		shortenString(vec, final);
+	}
+	else
+	{
+		vec.push_back(str);
+	}
+}
 
 Book::Book(const std::string& epub)
 {
@@ -103,11 +120,18 @@ void Book::parsePages(BLUnZip& zip)
         doc.Parse(data.c_str());
 
         XMLElement* html = doc.FirstChildElement("html");
-        XMLElement* body = html->FirstChildElement("body");
-
+    	XMLElement* body = html->FirstChildElement("body");
+        
         for (XMLElement* next = body->FirstChildElement(); next != nullptr; next = next->NextSiblingElement())
         {
-            m_text.push_back(next->GetText());
+        	if (next)
+        	{
+        		const char* textStr = next->GetText();
+            	if (textStr)
+            	{
+            		shortenString(m_text, textStr);
+            	}
+        	}
         }
     }
 }
