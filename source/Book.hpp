@@ -39,17 +39,11 @@ public:
 	/// Parse the ebook pages.
 	///
 	void parsePages(BLUnZip& zip);
-	
+
 	///
 	/// Returns the text of the book.
 	/// 
 	const std::vector<std::string>& getBookText() const;
-	
-private:
-	///
-	/// Open an ebook to read.
-	///	
-	void openBook(const std::string& epub);
 
 private:
 	std::string m_title;
