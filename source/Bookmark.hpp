@@ -20,12 +20,17 @@ public:
 	///
 	/// Load bookmarks for a book.
 	///
-	void loadBookmark(const std::string& book);
+	void loadBookmarks(const std::string& book);
 
 	///
-	/// Save bookmarks for a book.
+	/// Save a bookmark for the book.
 	///
-	void saveBookmark(const std::string& book);
+	void saveBookmark(const std::string& book, int page);
+
+	///
+	/// Remove a bookmark.
+	///
+	void removeBookmark(const std::string& book, int element);
 
 private:
 	std::vector<int> m_bookmarkedPages;
