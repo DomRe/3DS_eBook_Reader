@@ -76,7 +76,6 @@ void App::render()
 		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
 			m_gui.drawBookTop();
 			m_gui.drawStatusBar();
-
 		pp2d_end_draw();
 		
 		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);

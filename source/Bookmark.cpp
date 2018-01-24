@@ -7,6 +7,8 @@
 
 #include "Bookmark.hpp"
 
+using namespace tinyxml2;
+
 Bookmark::~Bookmark()
 {
 
