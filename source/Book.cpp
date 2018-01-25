@@ -16,15 +16,15 @@
 
 using namespace tinyxml2;
 
-void shortenString(std::vector<std::string>& vec, std::string str)
+static void shortenString(std::vector<std::string>& vec, std::string& str)
 {
 	if (str.size() > 715)
 	{
-		std::string final = str.substr(0, 715);
-		vec.push_back(final);
+		std::string&& chunk = str.substr(0, 715);
+		vec.push_back(chunk);
 
-		std::string rest = str.substr(716, str.size());
-		shortenString(vec, final);
+		str.erase(0, 715);
+		shortenString(vec, str);
 	}
 	else
 	{
@@ -127,10 +127,11 @@ void Book::parsePages(BLUnZip& zip)
         	if (next)
         	{
         		const char* textStr = next->GetText();
-            	if (textStr)
-            	{
-            		shortenString(m_text, textStr);
-            	}
+			if (textStr)
+			{
+				std::string str(textStr);
+				shortenString(m_text, str);
+			}
         	}
         }
     }
