@@ -1,6 +1,11 @@
 ## Nintendo 3DS eBook Reader
 [Download](https://github.com/reworks/3DS_eBook_Reader/releases/latest "Download the latest release here.")
 
+## Forums:
+[GBATemp.](https://gbatemp.net/threads/release-ebook-reader-v1-0-read-ebooks-on-your-3ds.495129/)
+
+[Reddit.](https://www.reddit.com/r/3dshacks/comments/7su3f4/released_v10_of_my_ebook_reader/)
+
 ### Instructions:
 Place books and the bookmarks.xml in a folder named "books" on the *root* of your SD card. Some books can take a while to load! Be patient!
 
