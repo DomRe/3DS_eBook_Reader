@@ -76,10 +76,10 @@ void App::render()
 		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
 			m_gui.drawBookTop();
 			m_gui.drawStatusBar();
-		pp2d_end_draw();
 		
-		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);
+		pp2d_draw_on(GFX_BOTTOM, GFX_LEFT);
 			m_gui.drawBookControls();
+
 		pp2d_end_draw();
 	}
 	else
@@ -87,11 +87,10 @@ void App::render()
 		pp2d_begin_draw(GFX_TOP, GFX_LEFT);
 			m_gui.drawTopBackground();
 			m_gui.drawStatusBar();
-		pp2d_end_draw();
 
-
-		pp2d_begin_draw(GFX_BOTTOM, GFX_LEFT);
+		pp2d_draw_on(GFX_BOTTOM, GFX_LEFT);
 			m_gui.drawFileSelect();
+			
 		pp2d_end_draw();
 	}
 }
