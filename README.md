@@ -2,7 +2,7 @@
 [Download](https://github.com/reworks/3DS_eBook_Reader/releases/latest "Download the latest release here.")
 
 ### Instructions:
-Place books in a folder named "books" on the *root* of your SD card. Some books can take a while to load! Be patient!
+Place books and the bookmarks.xml in a folder named "books" on the *root* of your SD card. Some books can take a while to load! Be patient!
 
 Make sure your ebooks are in .epub 3 or later format. You can use tools like [sigil](https://sigil-ebook.com/) or [calibre](https://calibre-ebook.com/).
 
