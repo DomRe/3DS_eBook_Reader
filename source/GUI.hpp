@@ -7,10 +7,12 @@
 #define EBOOK_GUI_HPP_
 
 #include <3ds.h>
+#include <sstream>
 
 #include "Book.hpp"
 #include "Input.hpp"
 #include "Texture.hpp"
+#include "Bookmark.hpp"
 
 class GUI
 {
@@ -77,6 +79,7 @@ private:
 	Texture* m_back;
 
 	Book* m_book = nullptr;
+	Bookmark m_bookmarks;
 
 	std::vector<Texture*> m_batteryLevels;
 	std::vector<std::string> m_files;
@@ -89,10 +92,17 @@ private:
 
 	bool m_drawAbout = false;
 	bool m_loading = false;
+	bool m_showBookmarks = false;
+	bool m_drawBookmarked = false;
 
 	int m_curBookPage = 0;
 	int m_curFilePage = 1;
 	int m_index = 0;
+	int m_indexBookmark = 0;
+	int m_curPageBookmark = 0;
+
+	unsigned int m_beginBookmark = 0;
+	unsigned int m_endBookmark = 7;
 
 private:
 	///
@@ -109,6 +119,20 @@ private:
 	/// Return the extension from a string.
 	///
 	std::string getExtension(const std::string& filename);
+
+	///
+	/// Takes numbers and returns a string.
+	///
+	template<typename T>
+	std::string to_string(const T& value);
 };
+
+template<typename T>
+std::string GUI::to_string(const T& value)
+{
+	std::ostringstream oss;
+	oss << value;
+	return oss.str();
+}
 
 #endif

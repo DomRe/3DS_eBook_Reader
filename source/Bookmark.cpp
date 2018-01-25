@@ -11,7 +11,7 @@ using namespace tinyxml2;
 
 Bookmark::~Bookmark()
 {
-
+	m_bookmarkedPages.clear();
 }
 
 void Bookmark::loadBookmarks(const std::string& book)
@@ -76,4 +76,9 @@ void Bookmark::removeBookmark(const std::string& book, int element)
     }
 
     doc.SaveFile("sdmc:/books/bookmarks.xml");
+}
+
+const std::vector<int>& Bookmark::getBookmarkedPages() const
+{
+	return m_bookmarkedPages;
 }

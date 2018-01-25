@@ -31,6 +31,11 @@ public:
 	/// Remove a bookmark.
 	///
 	void removeBookmark(const std::string& book, int element);
+	
+	///
+	/// Get the bookmarked pages.
+	///
+	const std::vector<int>& getBookmarkedPages() const;
 
 private:
 	std::vector<int> m_bookmarkedPages;

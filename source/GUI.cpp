@@ -7,7 +7,6 @@
 #include <ctime>
 #include <chrono>
 #include <cstdio>
-#include <sstream>
 #include <fstream>
 #include <cstdlib>
 #include <dirent.h> 
@@ -150,33 +149,125 @@ void GUI::event(Input& input, bool* isBookMode)
 		}
 		else
 		{	
-			// Book Events
-			
-			if ((input.getKeyDown() & KEY_B)  || (input.getPosX() >= 20 && input.getPosX() <= 103 && input.getPosY() >= 18 && input.getPosY() <= 185))
-			{ 
-				*isBookMode = false;
-				m_selected = "";
-				m_curFilePage = 1;
-				m_index = 0;
-				delete m_book;
-				m_book = nullptr;
-			}
-
-			if ((input.getKeyDown() & KEY_LEFT) || (input.getKeyDown() & KEY_L))
+			if (!m_showBookmarks)
 			{
-				--m_curBookPage;
-				if (m_curBookPage < 0)
+				// BOOK EVENTS
+
+				if (m_drawBookmarked)
 				{
-					m_curBookPage = 0;
+					if ((input.getPosX() >= 20 && input.getPosX() <= 300 && input.getPosY() >= 20 && input.getPosY() <= 220) || (input.getKeyDown() & KEY_A) )
+					{
+						m_drawBookmarked = false;
+					}
+				}
+				else
+				{
+					if ((input.getKeyDown() & KEY_B)  || (input.getPosX() >= 20 && input.getPosX() <= 103 && input.getPosY() >= 18 && input.getPosY() <= 185))
+					{ 
+						*isBookMode = false;
+						m_selected = "";
+						m_curFilePage = 1;
+						m_index = 0;
+						delete m_book;
+						m_book = nullptr;
+					}
+
+					if ((input.getKeyDown() & KEY_LEFT) || (input.getKeyDown() & KEY_L))
+					{
+						--m_curBookPage;
+						if (m_curBookPage < 0)
+						{
+							m_curBookPage = 0;
+						}
+					}
+					
+					if ((input.getKeyDown() & KEY_RIGHT) || (input.getKeyDown() & KEY_R))
+					{ 
+						++m_curBookPage;
+						if (m_curBookPage > m_book->getBookText().size())
+						{
+							m_curBookPage = m_book->getBookText().size();
+						}
+					}
+
+					if (input.getPosX() >= 120 && input.getPosX() <= 203 && input.getPosY() >= 18 && input.getPosY() <= 185)
+					{
+						m_showBookmarks = true;
+						m_bookmarks.loadBookmarks(m_selected);
+					}
+
+					if ((input.getPosX() >= 219 && input.getPosX() <= 302 && input.getPosY() >= 18 && input.getPosY() <= 185) || (input.getKeyDown() & KEY_SELECT) )
+					{
+						m_drawBookmarked = true;
+						m_bookmarks.saveBookmark(m_selected, m_curBookPage);
+						m_showBookmarks = false;
+					}
 				}
 			}
-			
-			if ((input.getKeyDown() & KEY_RIGHT) || (input.getKeyDown() & KEY_R))
-			{ 
-				++m_curBookPage;
-				if (m_curBookPage > m_book->getBookText().size())
+			else
+			{
+				// BOOKMARK MENU
+				
+				if (input.getKeyDown() & KEY_UP)
+				{ 
+					m_indexBookmark--;
+				}
+				
+				if (input.getKeyDown() & KEY_DOWN)
 				{
-					m_curBookPage = m_book->getBookText().size();
+				 	m_indexBookmark++; 
+				}
+				
+				if (input.getKeyDown() & KEY_LEFT) 
+				{ 
+					m_curPageBookmark--; 
+					m_indexBookmark = 0; 
+				}
+				
+				if (input.getKeyDown() & KEY_RIGHT) 
+				{ 
+					m_curPageBookmark++; 
+					m_indexBookmark = 0; 
+				}
+				
+				if (m_indexBookmark < 0) m_indexBookmark = 0;
+				if (m_indexBookmark > 6) m_indexBookmark = 6;
+				if (m_indexBookmark >= m_bookmarks.getBookmarkedPages().size()) m_indexBookmark = (m_bookmarks.getBookmarkedPages().size() - 1);
+				if (m_curPageBookmark < 0) m_curPageBookmark = 0;
+
+				if (input.getKeyDown() & KEY_X)
+				{ 
+					int bkmkelem = m_indexBookmark + (7 * m_curPageBookmark);
+				    if (!(bkmkelem >= m_bookmarks.getBookmarkedPages().size()))
+				    {
+				    	m_bookmarks.removeBookmark(m_selected, bkmkelem);
+				    }
+				}
+
+				if (input.getKeyDown() & KEY_A)
+				{ 
+					int bkmkelemtwo = m_indexBookmark + (7 * m_curPageBookmark);
+					if (!(bkmkelemtwo >= m_bookmarks.getBookmarkedPages().size()))
+					{
+						m_curBookPage = m_bookmarks.getBookmarkedPages()[bkmkelemtwo];
+					}
+				}
+
+				if (input.getPosX() >= 159 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241) 
+				{
+					if (m_drawAbout == true)
+					{
+						m_drawAbout = false;
+					}
+					else
+					{
+						m_drawAbout = true;
+					}
+				}
+
+				if ((input.getPosX() >= 0 && input.getPosX() <= 158 && input.getPosY() >= 217 && input.getPosY() <= 241) || (input.getKeyDown() & KEY_B))
+				{
+					m_showBookmarks = false;
 				}
 			}
 		}
@@ -289,7 +380,7 @@ void GUI::drawFileSelect()
 	else
 	{
 		float xLoad = (static_cast<float>(BOTTOM_WIDTH) / 2.0f) - (pp2d_get_text_width(m_loadText, 1.0f, 1.0f) / 2.0f);
-		float yLoad = (static_cast<float>(SCREEN_HEIGHT) / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f);
+		float yLoad = ((static_cast<float>(SCREEN_HEIGHT) / 2.0f) - (pp2d_get_text_height(m_loadText, 1.0f, 1.0f) / 2.0f)) - 20.0f;
 		pp2d_draw_text(xLoad, yLoad, 1.0f, 1.0f, RGBA8(0, 0, 0, 255), m_loadText);
 	}
 }
@@ -303,7 +394,48 @@ void GUI::drawBookTop()
 
 void GUI::drawBookControls()
 {
-	m_controls->draw(0, 0);
+	if (m_drawBookmarked)
+	{
+		m_bookmarkedBG->draw(0, 0);
+	}
+	else if (m_showBookmarks)
+	{
+		pp2d_draw_rectangle(0, 217, 320, 24, RGBA8(156, 156, 156, 255));
+
+		m_bottom->draw(0, 0);
+		m_back->draw(0, 217);
+
+		float pos = 20.0f;
+
+		if (m_curPageBookmark == 0)
+		{
+			m_beginBookmark = 0;
+			m_endBookmark = 7; 
+		}
+		else 
+		{
+			m_beginBookmark = (7 * m_curPageBookmark);
+			m_endBookmark = (7 * m_curPageBookmark) + 6;
+		}
+
+		if (m_endBookmark > m_bookmarks.getBookmarkedPages().size())
+		{
+			m_endBookmark = m_bookmarks.getBookmarkedPages().size();
+		}
+
+		for (m_beginBookmark = m_beginBookmark; m_beginBookmark < m_endBookmark; ++m_beginBookmark)
+		{
+			std::string bob = "Page " + to_string<int>(m_bookmarks.getBookmarkedPages()[m_beginBookmark]); 
+			pp2d_draw_text(30.0f, pos, SCALE, SCALE, RGBA8(0, 0, 0, 255), bob.c_str());
+			pos += 20.0f;
+		}
+
+		pp2d_draw_text((30.0f - pp2d_get_text_width("->", SCALE, SCALE)) - 2.0f, 20.0f + (m_indexBookmark * 20), SCALE, SCALE, RGBA8(0, 0, 0, 255), "->");
+	}
+	else
+	{
+		m_controls->draw(0, 0);
+	}
 }
 
 void GUI::removeBook(const std::string& file)
