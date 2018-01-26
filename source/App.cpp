@@ -12,11 +12,8 @@
 App::App()
 :m_isBookMode(false)
 {
-	sdmcInit();
 	romfsInit();
-	aptInit();
 	ptmuInit();
-	hidInit();
 
 	pp2d_init();
 	pp2d_set_3D(0);
@@ -31,11 +28,8 @@ App::~App()
 
 	pp2d_exit();
 
-	hidExit();
 	ptmuExit();
-	aptExit();
 	romfsExit();
-	sdmcExit();
 }
 
 int App::run()
