@@ -8,3 +8,5 @@ out/
 public domain books/
 *.lnk
 *.zip
+books/
+*.bat
