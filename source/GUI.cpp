@@ -130,7 +130,7 @@ void GUI::event(Input& input, bool* isBookMode)
 				m_selected = m_files[m_index + ((8 * m_curFilePage) - 8)];
 			}
 
-			if (input.getPosX() >= 159 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241)
+			if (input.getKeyDown() & KEY_SELECT)
 			{
 				if (m_drawAbout == true)
 				{
@@ -253,19 +253,7 @@ void GUI::event(Input& input, bool* isBookMode)
 					}
 				}
 
-				if (input.getPosX() >= 159 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241) 
-				{
-					if (m_drawAbout == true)
-					{
-						m_drawAbout = false;
-					}
-					else
-					{
-						m_drawAbout = true;
-					}
-				}
-
-				if ((input.getPosX() >= 0 && input.getPosX() <= 158 && input.getPosY() >= 217 && input.getPosY() <= 241) || (input.getKeyDown() & KEY_B))
+				if ((input.getPosX() >= 0 && input.getPosX() <= 320 && input.getPosY() >= 217 && input.getPosY() <= 241) || (input.getKeyDown() & KEY_B))
 				{
 					m_showBookmarks = false;
 				}
