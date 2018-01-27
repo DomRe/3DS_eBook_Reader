@@ -39,7 +39,7 @@ void GUI::init()
 	struct dirent *ent;
 	
 	mkdir("sdmc:/books", 777);
-	dir = opendir("/books");
+	dir = opendir("sdmc:/books");
 
 	while ((ent = readdir (dir)) != nullptr	)
 	{
