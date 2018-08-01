@@ -9,7 +9,7 @@
 ### Instructions:
 Place books and the bookmarks.xml in a folder named "books" on the *root* of your SD card. Some books can take a while to load! Be patient!
 
-Make sure your ebooks are in .epub 3 or later format. You can use tools like [sigil](https://sigil-ebook.com/) or [calibre](https://calibre-ebook.com/).
+Make sure your ebooks are in .epub extension, but are OEBPS/OEB (OPF) 2.0 format. You can use tools like [sigil](https://sigil-ebook.com/) or [calibre](https://calibre-ebook.com/).
 
 I recommend going to DRM-Free bookshops or public domain websites such as [Project Gutenberg](https://www.gutenberg.org/).
 The reason I recommend this is because this app DOES NOT SUPPORT BOOKS WITH DRM.
