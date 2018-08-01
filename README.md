@@ -14,10 +14,12 @@ Make sure your ebooks are in .epub extension, but are OEBPS/OEB (OPF) 2.0 format
 I recommend going to DRM-Free bookshops or public domain websites such as [Project Gutenberg](https://www.gutenberg.org/).
 The reason I recommend this is because this app DOES NOT SUPPORT BOOKS WITH DRM.
 
-
+### Notes:
 IF THE FORMAT IS WRONG, THE APP WILL FREEZE/CRASH.
 
 THIS APP IS ONLY TESTED WITH ENGLISH LANGUAGE BOOKS.
+
+THIS IS A PROOF-OF-CONCEPT APP AND AS SUCH IS MISSING FEATURES / SUPPORT.
 
 ### Credits:
 - AlbertoSonic for original repo + art.
